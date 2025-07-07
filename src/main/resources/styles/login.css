@@ -1,0 +1,31 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.login-box {
+    -fx-padding: 40;
+    -fx-background-color: rgba(30, 16, 63, 0.85); /* fondo morado semitransparente */
+    -fx-background-radius: 20;
+}
+
+.input {
+    -fx-background-color: #d3d3d3;
+    -fx-background-radius: 15;
+    -fx-padding: 10;
+    -fx-pref-width: 250;
+}
+
+.login-button {
+    -fx-background-color: #E6EEF3;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+}
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
