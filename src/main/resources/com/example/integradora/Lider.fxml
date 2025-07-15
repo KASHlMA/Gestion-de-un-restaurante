@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" prefWidth="600" prefHeight="400"
-            fx:controller="com.example.integradora.LiderController">
-    <children>
-        <Label text="¡Bienvenido, Líder de Meseros!"
-               layoutX="150" layoutY="100"
-               style="-fx-font-size: 24px; -fx-text-fill: #008080;"/>
-        <Button text="Cerrar Sesión" layoutX="250" layoutY="200" onAction="#cerrarSesion"/>
-    </children>
-</AnchorPane>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.integradora.LiderController"
+            prefWidth="900" prefHeight="600"
+            stylesheets="@../../../styles/lider.css">
+
+    <!-- Menú lateral izquierdo -->
+    <left>
+        <VBox spacing="25" alignment="TOP_CENTER" styleClass="menu-lateral" prefHeight="600">
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 30 0 10 0;">
+                <ImageView fitHeight="60" fitWidth="60">
+                    <image>
+                        <Image url="@../../../images/iconUser.png" />
+                    </image>
+                </ImageView>
+                <Label text="Líder De Mesero" styleClass="usuario-label"/>
+                <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+            </VBox>
+            <Separator/>
+            <VBox spacing="10" style="-fx-padding: 25 0 0 0;">
+                <Button text="Visualizar Mesas y Meseros" styleClass="menu-btn" onAction="#mostrarMesas"/>
+                <Button text="Asignación de Plan" styleClass="menu-btn" onAction="#mostrarAsignacion"/>
+                <Button text="Solicitudes de Cambios" styleClass="menu-btn" onAction="#mostrarSolicitudes"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área central dinámica, aquí se carga cada módulo -->
+    <center>
+        <VBox fx:id="contenidoCentral" alignment="TOP_CENTER" spacing="30">
+            <!-- Contenido inicial: la tabla de mesas -->
+            <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
+            <TableView fx:id="tablaMesas" prefWidth="600">
+                <columns>
+                    <TableColumn fx:id="colMesas" text="Mesas" prefWidth="200"/>
+                    <TableColumn fx:id="colMesero" text="Mesero" prefWidth="200"/>
+                    <TableColumn fx:id="colHorario" text="Horario" prefWidth="200"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>
