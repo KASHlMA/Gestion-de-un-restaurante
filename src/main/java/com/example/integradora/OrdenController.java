@@ -186,7 +186,7 @@ public class OrdenController {
      */
     @FXML
     private void realizarOrden() {
-        // Validación de campos (igual que tienes)
+        // 1. Validación
         for (FilaOrden fila : filas) {
             if (fila.getCategoria() == null || fila.getPlatillo() == null || fila.getCantidad() == null ||
                     fila.getCategoria().isEmpty() || fila.getPlatillo().isEmpty() || fila.getCantidad().isEmpty()) {
@@ -205,30 +205,24 @@ public class OrdenController {
         try (Connection con = Conexion.conectar()) {
             con.setAutoCommit(false);
 
-            // 1. Insertar la orden (sin secuencia ni ID)
+            // --- 1. Insertar la orden (NO pongas el ID) ---
             int mesaId = obtenerIdMesaPorNombre(nombreMesa);
-            java.sql.Timestamp ahora = new java.sql.Timestamp(System.currentTimeMillis());
-
-            String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA) VALUES (?, ?, ?)";
+            String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO) VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA')";
             int idOrden = -1;
-
-            try (PreparedStatement stmt = con.prepareStatement(sqlOrden, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement stmt = con.prepareStatement(sqlOrden, new String[]{"ID"})) {
                 stmt.setInt(1, mesaId);
                 stmt.setInt(2, idMesero);
-                stmt.setTimestamp(3, ahora);
                 stmt.executeUpdate();
-
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) idOrden = rs.getInt(1);
             }
 
-            // 2. Insertar detalles (sin ID ni secuencia)
+            // --- 2. Insertar los detalles ---
             String sqlDetalle = "INSERT INTO DETALLE_ORDEN (ORDEN_ID, PLATILLO_ID, CANTIDAD) VALUES (?, ?, ?)";
             try (PreparedStatement stmtDetalle = con.prepareStatement(sqlDetalle)) {
                 for (FilaOrden fila : filas) {
                     int platilloId = obtenerIdPlatilloPorNombre(fila.getPlatillo());
                     int cantidad = Integer.parseInt(fila.getCantidad());
-
                     stmtDetalle.setInt(1, idOrden);
                     stmtDetalle.setInt(2, platilloId);
                     stmtDetalle.setInt(3, cantidad);
@@ -247,6 +241,7 @@ public class OrdenController {
             mostrarAlerta("Error al guardar", "No se pudo registrar la orden.\n" + e.getMessage());
         }
     }
+
 
 
     /**
