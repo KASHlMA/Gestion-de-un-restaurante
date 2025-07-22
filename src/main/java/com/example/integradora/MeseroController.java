@@ -86,10 +86,19 @@ public class MeseroController {
      * Método que se llama cuando el mesero da click en "Tomar Orden"
      */
     private void tomarOrden(String mesa, String horario) {
-        // Aquí mandas al mesero a la pantalla de orden, pasando el nombre de la mesa y horario
-        mostrarAlerta("Tomar Orden", "Abrir pantalla para mesa: " + mesa + " en horario " + horario);
-        // TODO: Aquí puedes llamar al método para cambiar de pantalla a la de orden, pasando datos
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/orden.fxml"));
+            Parent root = loader.load();
+            OrdenController ordenController = loader.getController();
+            ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), mesa, horario);
+            Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la pantalla de orden.");
+        }
     }
+
 
     /**
      * Método que se llama desde el botón "Cerrar Sesión" del FXML.

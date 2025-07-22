@@ -4,26 +4,31 @@
 <VBox xmlns="http://javafx.com/javafx/17.0.12"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.integradora.OrdenController"
-      alignment="CENTER" spacing="25" prefWidth="900" prefHeight="600"
-      style="-fx-background-color: #e9f1f5;">
+      alignment="TOP_CENTER" spacing="10" prefWidth="900" prefHeight="600">
 
-    <Label fx:id="labelMesaYHorario" text="Mesa Asignada: Orden para Mesa X - 3:00 PM a 6:00 PM" styleClass="label-mesa"/>
+    <!-- Barra de navegación superior -->
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10 20 10 20;">
+        <Button text="← Atrás" onAction="#volverAtras" styleClass="boton-atras"/>
+        <Label text="Mesero: " />
+        <Label fx:id="labelMesero" text="(Nombre mesero)" style="-fx-font-weight: bold;"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+    </HBox>
+
+    <Label fx:id="labelMesaYHorario" text="Mesa Asignada: " styleClass="label-mesa"/>
     <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
 
-    <!-- Tabla de orden -->
-    <TableView fx:id="tablaOrden" prefWidth="600">
+    <TableView fx:id="tablaOrden" prefWidth="800">
         <columns>
-            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
-            <TableColumn fx:id="colPlatillo" text="Nombre del Platillo" prefWidth="180"/>
-            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
-            <TableColumn fx:id="colAcciones" text=" " prefWidth="120"/>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="200"/>
+            <TableColumn fx:id="colPlatillo" text="Nombre del Platillo" prefWidth="260"/>
+            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="110"/>
+            <TableColumn fx:id="colAcciones" text=" " prefWidth="70"/>
         </columns>
     </TableView>
 
-    <!-- Botón para agregar más filas a la orden -->
-    <Button text="+ Añadir platillo" onAction="#agregarFilaOrden" styleClass="boton-verde" maxWidth="200"/>
-
-    <!-- Botón para realizar la orden -->
-    <Button text="Realizar la orden" onAction="#realizarOrden" styleClass="boton-oscuro" maxWidth="200"/>
-
+    <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 10 0;">
+        <Button text="+ Añadir platillo" onAction="#agregarFilaOrden" styleClass="boton-verde" maxWidth="200"/>
+        <Button text="Realizar la orden" onAction="#realizarOrden" styleClass="boton-oscuro" maxWidth="200"/>
+    </HBox>
 </VBox>
