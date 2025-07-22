@@ -31,53 +31,54 @@ public class LoginController {
         String usuario = usernameField.getText();
         String contrasena = passwordField.getText();
 
-        // Consulta SQL para buscar usuario por nombre, contraseña y obtener su ROL y ESTADO
-        String sql = "SELECT ROL, ESTADO FROM USUARIOS WHERE USUARIO = ? AND CONTRASENA = ?";
+        // Ahora tu consulta también trae el ID y el nombre real
+        String sql = "SELECT ID, NOMBRE, ROL, ESTADO FROM USUARIOS WHERE USUARIO = ? AND CONTRASENA = ?";
+
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setString(1, usuario); // Asigna el nombre de usuario al primer ?
-            stmt.setString(2, contrasena); // Asigna la contraseña al segundo ?
+            stmt.setString(1, usuario);
+            stmt.setString(2, contrasena);
 
-            // Ejecuta la consulta y obtiene los resultados
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) { // Si encontró un usuario
+            if (rs.next()) {
                 String rol = rs.getString("ROL");
                 String estado = rs.getString("ESTADO");
+                int idUsuario = rs.getInt("ID");
+                String nombreUsuario = rs.getString("NOMBRE");
 
-                // Verifica si el usuario está activo
                 if (!"ACTIVO".equalsIgnoreCase(estado)) {
                     mostrarAlerta("Usuario inactivo", "Este usuario está inactivo.", Alert.AlertType.ERROR);
-                    return; // Termina el método si no está activo
+                    return;
                 }
 
-                // Según el ROL, navega a la pantalla correspondiente
                 switch (rol.toUpperCase()) {
                     case "ADMIN":
-                        // Aquí puedes poner abrirPantalla("/com/example/integradora/admin.fxml");
                         mostrarAlerta("Bienvenido", "¡Acceso como ADMIN!", Alert.AlertType.INFORMATION);
                         break;
                     case "LIDER_MESEROS":
                     case "LIDER DE MESEROS":
-                        // Navega a la pantalla de líder de mesero
                         abrirPantalla("/com/example/integradora/lider.fxml");
                         break;
                     case "MESERO":
-                        // Aquí puedes poner abrirPantalla("/com/example/integradora/mesero.fxml");
-                        mostrarAlerta("Bienvenido", "¡Acceso como MESERO!", Alert.AlertType.INFORMATION);
+                        // --- AQUÍ SE HACE LA REDIRECCIÓN ---
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/mesero.fxml"));
+                        Parent root = loader.load();
+                        MeseroController meseroController = loader.getController();
+                        meseroController.setIdMesero(idUsuario, nombreUsuario);
+                        Stage stage = (Stage) usernameField.getScene().getWindow();
+                        stage.setScene(new Scene(root));
                         break;
                     default:
-                        // Rol no reconocido
                         mostrarAlerta("Rol desconocido", "El rol no es válido.", Alert.AlertType.ERROR);
                 }
             } else {
-                // Si no encuentra usuario, muestra mensaje de error
                 mostrarAlerta("Error de login", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            // Muestra un error si hay una excepción (por ejemplo, de conexión)
             e.printStackTrace();
             mostrarAlerta("Error de sistema", e.getMessage(), Alert.AlertType.ERROR);
         }
+
     }
 
     /**

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.OrdenController"
+      alignment="CENTER" spacing="25" prefWidth="900" prefHeight="600"
+      style="-fx-background-color: #e9f1f5;">
+
+    <Label fx:id="labelMesaYHorario" text="Mesa Asignada: Orden para Mesa X - 3:00 PM a 6:00 PM" styleClass="label-mesa"/>
+    <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
+
+    <!-- Tabla de orden -->
+    <TableView fx:id="tablaOrden" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
+            <TableColumn fx:id="colPlatillo" text="Nombre del Platillo" prefWidth="180"/>
+            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
+            <TableColumn fx:id="colAcciones" text=" " prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <!-- Botón para agregar más filas a la orden -->
+    <Button text="+ Añadir platillo" onAction="#agregarFilaOrden" styleClass="boton-verde" maxWidth="200"/>
+
+    <!-- Botón para realizar la orden -->
+    <Button text="Realizar la orden" onAction="#realizarOrden" styleClass="boton-oscuro" maxWidth="200"/>
+
+</VBox>
