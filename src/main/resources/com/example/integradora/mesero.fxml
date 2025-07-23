@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
+
 <?import javafx.scene.control.*?>
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.integradora.MeseroController"
-            prefWidth="900" prefHeight="600"
-            stylesheets="@../../../styles/mesero.css">
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600" prefWidth="900" stylesheets="@../../../styles/mesero.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.MeseroController">
 
     <!-- Perfil y botón cerrar -->
     <VBox alignment="TOP_RIGHT" layoutX="700" layoutY="25" spacing="5">
-        <Label text="Mesero:" styleClass="usuario-label"/>
-        <Label fx:id="labelNombreMesero" text="Juan Pablo Perez"/>
-        <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+        <Label styleClass="usuario-label" text="Mesero:" />
+        <Label fx:id="labelNombreMesero" text="Juan Pablo Perez" />
+        <Button onAction="#cerrarSesion" styleClass="cerrar-sesion" text="Cerrar Sesión" />
     </VBox>
 
     <!-- Centro: tabla de mesas asignadas -->
-    <VBox alignment="CENTER" spacing="20" prefWidth="400" layoutX="250" layoutY="110">
-        <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
-        <TableView fx:id="tablaMesasMesero" prefWidth="400">
+    <VBox alignment="CENTER" layoutX="250" layoutY="110" prefWidth="400" spacing="20">
+        <Label styleClass="titulo-bienvenida" text="¡Bienvenido!" />
+        <TableView fx:id="tablaMesasMesero" prefHeight="400.0" prefWidth="444.0">
             <columns>
-                <TableColumn fx:id="colMesa" text="Mesa Asignada" prefWidth="150"/>
-                <TableColumn fx:id="colHorario" text="Horario" prefWidth="150"/>
-                <TableColumn fx:id="colAccion" text=" " prefWidth="100"/>
+                <TableColumn fx:id="colMesa" prefWidth="120" text="Mesa Asignada" />
+                <TableColumn fx:id="colHorario" prefWidth="120" text="Horario" />
+                <TableColumn fx:id="colTomarOrden" prefWidth="90" text="Tomar Orden" />
+                <TableColumn fx:id="colCambios" prefWidth="110" text="Realizar Cambios" />
+                <TableColumn fx:id="colCerrarCuenta" prefWidth="90" text="Cerrar Cuenta" />
             </columns>
         </TableView>
+
     </VBox>
 </AnchorPane>

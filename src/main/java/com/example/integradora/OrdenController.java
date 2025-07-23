@@ -186,7 +186,7 @@ public class OrdenController {
      */
     @FXML
     private void realizarOrden() {
-        // 1. Validación
+        // 1. Validación de campos
         for (FilaOrden fila : filas) {
             if (fila.getCategoria() == null || fila.getPlatillo() == null || fila.getCantidad() == null ||
                     fila.getCategoria().isEmpty() || fila.getPlatillo().isEmpty() || fila.getCantidad().isEmpty()) {
@@ -205,19 +205,38 @@ public class OrdenController {
         try (Connection con = Conexion.conectar()) {
             con.setAutoCommit(false);
 
-            // --- 1. Insertar la orden (NO pongas el ID) ---
             int mesaId = obtenerIdMesaPorNombre(nombreMesa);
-            String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO) VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA')";
+
+            // 👉 Primero busca si ya hay una orden ABIERTA para esta mesa y este mesero
             int idOrden = -1;
-            try (PreparedStatement stmt = con.prepareStatement(sqlOrden, new String[]{"ID"})) {
+            String sqlCheck = "SELECT ID FROM ORDENES WHERE MESA_ID = ? AND MESERO_ID = ? AND ESTADO = 'ABIERTA'";
+            try (PreparedStatement stmt = con.prepareStatement(sqlCheck)) {
                 stmt.setInt(1, mesaId);
                 stmt.setInt(2, idMesero);
-                stmt.executeUpdate();
-                ResultSet rs = stmt.getGeneratedKeys();
-                if (rs.next()) idOrden = rs.getInt(1);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) idOrden = rs.getInt("ID");
             }
 
-            // --- 2. Insertar los detalles ---
+            // Si no existe, crea una nueva
+            if (idOrden == -1) {
+                String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO) VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA')";
+                try (PreparedStatement stmt = con.prepareStatement(sqlOrden, new String[]{"ID"})) {
+                    stmt.setInt(1, mesaId);
+                    stmt.setInt(2, idMesero);
+                    stmt.executeUpdate();
+                    ResultSet rs = stmt.getGeneratedKeys();
+                    if (rs.next()) idOrden = rs.getInt(1);
+                }
+            } else {
+                // Si existe, elimina los detalles anteriores para actualizar la orden (opcional)
+                String sqlDel = "DELETE FROM DETALLE_ORDEN WHERE ORDEN_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(sqlDel)) {
+                    stmt.setInt(1, idOrden);
+                    stmt.executeUpdate();
+                }
+            }
+
+            // --- Inserta los detalles nuevos ---
             String sqlDetalle = "INSERT INTO DETALLE_ORDEN (ORDEN_ID, PLATILLO_ID, CANTIDAD) VALUES (?, ?, ?)";
             try (PreparedStatement stmtDetalle = con.prepareStatement(sqlDetalle)) {
                 for (FilaOrden fila : filas) {
@@ -232,15 +251,24 @@ public class OrdenController {
             }
 
             con.commit();
-            mostrarAlerta("¡Orden realizada!", "La orden fue registrada exitosamente.");
-            filas.clear();
-            agregarFilaOrden();
+
+            // --- Navega al detalle ---
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/detalle_orden.fxml"));
+            Parent root = loader.load();
+            DetalleOrdenController controller = loader.getController();
+            String ruta = "Mesas Asignadas/Orden " + nombreMesa;
+            controller.setDatosOrden(idOrden, idMesero, nombreMesero, ruta);
+
+            Stage stage = (Stage) tablaOrden.getScene().getWindow();
+            stage.setScene(new Scene(root));
 
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error al guardar", "No se pudo registrar la orden.\n" + e.getMessage());
         }
     }
+
+
 
 
 

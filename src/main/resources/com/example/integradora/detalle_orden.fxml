@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.integradora.DetalleOrdenController"
+            prefWidth="800" prefHeight="600"
+            stylesheets="@../../../styles/mesero.css">
+
+    <!-- Encabezado con usuario y botón cerrar sesión -->
+    <VBox alignment="TOP_RIGHT" layoutX="650" layoutY="25" spacing="5">
+        <Label text="Mesero:" styleClass="usuario-label"/>
+        <Label fx:id="labelNombreMesero" text="Juan Pablo Perez"/>
+        <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+    </VBox>
+
+    <!-- Mensaje Bienvenida y ruta de pantalla -->
+    <VBox alignment="CENTER" spacing="10" layoutX="0" layoutY="40" prefWidth="800">
+        <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
+        <Label fx:id="labelRuta" text="Mesas Asignadas / Orden Mesa 3"
+               style="-fx-font-size: 12px; -fx-text-fill: #444444;"/>
+    </VBox>
+
+    <!-- Tabla con detalle de la orden -->
+    <VBox alignment="CENTER" spacing="20" layoutX="200" layoutY="130" prefWidth="400">
+        <TableView fx:id="tablaDetalle" prefWidth="400">
+            <columns>
+                <TableColumn fx:id="colPlatillo" text="Cuenta" prefWidth="250"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Botones de acciones abajo -->
+    <HBox alignment="CENTER" spacing="20" layoutX="275" layoutY="450" prefWidth="300">
+        <Button fx:id="btnModificar" text="Modificar" onAction="#modificarOrden" styleClass="modificar-btn"/>
+        <Button fx:id="btnEnviarCocina" text="Enviar a Cocina" onAction="#enviarCocina" styleClass="cocina-btn"/>
+    </HBox>
+
+
+</AnchorPane>
