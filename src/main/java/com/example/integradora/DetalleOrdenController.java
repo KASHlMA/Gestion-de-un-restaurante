@@ -21,7 +21,6 @@ public class DetalleOrdenController {
     @FXML private TableColumn<DetalleOrden, String> colCantidad;
     @FXML private Button btnModificar;
     @FXML private Button btnEnviarCocina;
-    @FXML private Button btnSolicitarCambios;
 
     private int idOrden;
     private int idMesero;
@@ -82,13 +81,12 @@ public class DetalleOrdenController {
         if ("ENVIADA".equalsIgnoreCase(estado)) {
             btnModificar.setVisible(false);
             btnEnviarCocina.setVisible(false);
-            btnSolicitarCambios.setVisible(true); // Solo visible cuando ya fue enviada
         } else {
             btnModificar.setVisible(true);
             btnEnviarCocina.setVisible(true);
-            btnSolicitarCambios.setVisible(false);
         }
     }
+
 
     /**
      * Consulta el estado de la orden (ABIERTA, ENVIADA, CERRADA...)
@@ -155,13 +153,6 @@ public class DetalleOrdenController {
     /**
      * Botón para solicitar cambios (envía notificación al líder de meseros)
      */
-    @FXML
-    private void solicitarCambios() {
-        // Aquí deberías guardar una solicitud de cambio en la tabla SOLICITUDES_CAMBIO
-        mostrarAlerta("Solicitud enviada", "Se ha solicitado autorización al líder de meseros.");
-        // Puedes deshabilitar el botón hasta que el líder responda
-        btnSolicitarCambios.setDisable(true);
-    }
 
     /**
      * Cierra la sesión y vuelve al login.
