@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox alignment="TOP_CENTER" spacing="25" styleClass="solicitudes-bg" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.integradora.SolicitudesController">
+    <Label text="Solicitudes de Cambios de Orden" styleClass="titulo-solicitudes"/>
+    <TableView fx:id="tablaSolicitudes" prefWidth="700">
+        <columns>
+            <TableColumn fx:id="colMesa" text="Mesa" prefWidth="100"/>
+            <TableColumn fx:id="colMesero" text="Mesero" prefWidth="150"/>
+            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="220"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="130"/>
+        </columns>
+    </TableView>
+</VBox>

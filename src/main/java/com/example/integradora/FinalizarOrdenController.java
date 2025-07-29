@@ -25,17 +25,21 @@ public class FinalizarOrdenController {
     private int idOrden;
     private String nombreMesero;
     private String ruta;
+    private int idMesero;
+
 
     private ObservableList<ResumenCuenta> resumen = FXCollections.observableArrayList();
 
     public void setDatosOrden(int idOrden, int idMesero, String nombreMesero, String ruta) {
         this.idOrden = idOrden;
+        this.idMesero = idMesero; // <-- GUÁRDALO AQUÍ
         this.nombreMesero = nombreMesero;
         this.ruta = ruta;
         labelNombreMesero.setText(nombreMesero);
         labelRuta.setText(ruta);
         cargarResumen();
     }
+
 
 
     @FXML
@@ -73,17 +77,22 @@ public class FinalizarOrdenController {
 
     @FXML
     private void finalizar() {
-        // Puedes cerrar la ventana o redirigir a login
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/calificar_mesero.fxml"));
             Parent root = loader.load();
+
+            // Pasa los datos al controller de calificación
+            CalificarMeseroController controller = loader.getController();
+            controller.setDatos(idMesero, idOrden);
+
             Stage stage = (Stage) btnFinalizar.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo finalizar la operación.");
+            mostrarAlerta("Error", "No se pudo mostrar la pantalla de calificación.");
         }
     }
+
 
     @FXML
     private void cerrarSesion(javafx.event.ActionEvent event) {
