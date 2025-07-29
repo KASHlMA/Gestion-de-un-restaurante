@@ -216,5 +216,4 @@ public class DetalleOrdenController {
         alert.showAndWait();
     }
 
-    
 }

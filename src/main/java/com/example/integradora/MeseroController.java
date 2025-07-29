@@ -131,12 +131,31 @@ public class MeseroController {
 
     // Lógica para solicitar cambios
     private void solicitarCambio(MesaAsignada asignacion) {
-        mostrarAlerta("Solicitud de Cambios", "Aquí iría la lógica para solicitar cambios.");
+        try {
+            // Cargar el FXML de la ventana de solicitud de cambio
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/solicitar_cambio.fxml"));
+            Parent root = loader.load();
+
+            // Pasa datos al controller de la solicitud
+            SolicitarCambioController controller = loader.getController();
+            controller.setDatos(
+                    idMesero,
+                    obtenerIdMesaPorNombre(asignacion.getMesa()),
+                    asignacion.getMesa()
+            );
+
+            // Muestra como ventana modal
+            Stage stage = new Stage();
+            stage.setTitle("Solicitar Cambio");
+            stage.setScene(new Scene(root));
+            stage.initOwner(tablaMesasMesero.getScene().getWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la ventana de solicitud de cambio.");
+        }
     }
 
-    /**
-     * Cambia la orden ENVIADA a CERRADA y muestra el resumen final.
-     */
     private void cerrarCuenta(MesaAsignada asignacion) {
         try (Connection con = Conexion.conectar()) {
             // 1. Buscar el ID de la mesa
@@ -225,6 +244,7 @@ public class MeseroController {
         alert.setHeaderText(null);
         alert.showAndWait();
     }
+
 
     // Clase modelo con estado de la orden
     public static class MesaAsignada {
