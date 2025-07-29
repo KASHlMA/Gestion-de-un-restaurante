@@ -215,4 +215,6 @@ public class DetalleOrdenController {
         alert.setHeaderText(null);
         alert.showAndWait();
     }
+
+    
 }

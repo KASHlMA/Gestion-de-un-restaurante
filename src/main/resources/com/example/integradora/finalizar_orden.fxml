@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.integradora.FinalizarOrdenController"
+            prefWidth="800" prefHeight="600"
+            stylesheets="@../../../styles/mesero.css">
+
+    <!-- Encabezado -->
+    <VBox alignment="TOP_RIGHT" layoutX="650" layoutY="25" spacing="5">
+        <Label text="Mesero:" styleClass="usuario-label"/>
+        <Label fx:id="labelNombreMesero" text="Juan Pablo Perez"/>
+        <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+    </VBox>
+
+    <!-- Bienvenida y ruta -->
+    <VBox alignment="CENTER" spacing="10" layoutX="0" layoutY="40" prefWidth="800">
+        <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
+        <Label fx:id="labelRuta" text="Mesas Asignadas/Orden Mesa 3"
+               style="-fx-font-size: 12px; -fx-text-fill: #444444;"/>
+    </VBox>
+
+    <!-- Tabla de resumen de cuenta -->
+    <VBox alignment="CENTER" spacing="20" layoutX="250" layoutY="120" prefWidth="400">
+        <TableView fx:id="tablaResumen" prefWidth="400">
+            <columns>
+                <TableColumn fx:id="colPlatillo" text="Cuenta" prefWidth="250"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="70"/>
+            </columns>
+        </TableView>
+
+        <!-- Total -->
+        <HBox alignment="CENTER_RIGHT" spacing="10" prefWidth="400">
+            <Label text="Total:" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            <Label fx:id="labelTotal" text="0" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Botón para finalizar o volver -->
+    <HBox alignment="CENTER" spacing="20" layoutX="330" layoutY="400" prefWidth="160">
+        <Button fx:id="btnFinalizar" text="Finalizar" onAction="#finalizar" styleClass="cerrar-sesion"/>
+    </HBox>
+
+</AnchorPane>
