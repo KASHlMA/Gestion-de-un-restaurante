@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.ComidaAdminController"
+      alignment="TOP_CENTER" spacing="18" style="-fx-padding: 20;">
+    <Label text="Gestión de Comida" styleClass="titulo-bienvenida"/>
+    <HBox spacing="12">
+        <Button fx:id="btnAgregarPlatillo" text="Agregar Platillo" onAction="#abrirAgregarPlatillo"/>
+        <Button fx:id="btnAgregarCategoria" text="Agregar Categoría" onAction="#abrirAgregarCategoria"/>
+    </HBox>
+    <TableView fx:id="tablaPlatillos" prefWidth="640">
+        <columns>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="160"/>
+            <TableColumn fx:id="colPlatillo" text="Platillo" prefWidth="160"/>
+            <TableColumn fx:id="colPrecio" text="Precio" prefWidth="120"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="100"/>
+        </columns>
+    </TableView>
+    <Separator/>
+    <Label text="Categorías" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <TableView fx:id="tablaCategorias" prefWidth="400">
+        <columns>
+            <TableColumn fx:id="colNombreCategoria" text="Nombre" prefWidth="200"/>
+            <TableColumn fx:id="colEstadoCategoria" text="Estado" prefWidth="100"/>
+            <TableColumn fx:id="colAccionesCategoria" text="Acciones" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

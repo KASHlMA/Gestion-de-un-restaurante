@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.FormularioPlatilloController"
+      alignment="CENTER" spacing="16" style="-fx-padding: 20; -fx-background-color: white;">
+    <Label fx:id="tituloLabel" text="Añadir Platillo" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <ComboBox fx:id="comboCategoria" promptText="Categoría"/>
+    <TextField fx:id="txtNombrePlatillo" promptText="Nombre del platillo"/>
+    <TextField fx:id="txtPrecio" promptText="Precio"/>
+    <ComboBox fx:id="comboEstado" promptText="Estado"/>
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Cancelar" onAction="#cancelar" style="-fx-background-color: #e0e0e0;"/>
+        <Button text="Guardar" onAction="#guardar" style="-fx-background-color: #1f87c3; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

@@ -44,7 +44,7 @@ public class AdminController {
 
     @FXML
     private void mostrarComida() {
-        setContenidoCentral("/com/example/integradora/admin_comida.fxml");
+        setContenidoCentral("/com/example/integradora/comida_admin.fxml");
     }
 
     @FXML
