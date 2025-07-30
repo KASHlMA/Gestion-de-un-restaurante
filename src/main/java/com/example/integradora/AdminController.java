@@ -39,7 +39,7 @@ public class AdminController {
 
     @FXML
     private void mostrarUsuarios() {
-        setContenidoCentral("/com/example/integradora/admin_usuarios.fxml");
+        setContenidoCentral("/com/example/integradora/usuarios_admin.fxml");
     }
 
     @FXML

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.UsuariosAdminController"
+      alignment="TOP_CENTER" spacing="20" style="-fx-background-color: transparent;">
+    <Label text="Usuarios" styleClass="titulo-bienvenida"/>
+    <Button text="Añadir Usuario" fx:id="btnAnadirUsuario" onAction="#abrirAgregarUsuario" style="-fx-background-color: #1f87c3; -fx-text-fill: white;"/>
+    <TableView fx:id="tablaUsuarios" prefWidth="700">
+        <columns>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+            <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="120"/>
+            <TableColumn fx:id="colRol" text="Rol" prefWidth="120"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/> <!-- ESTA ES LA QUE FALTABA -->
+            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="80"/>
+        </columns>
+    </TableView>
+
+</VBox>

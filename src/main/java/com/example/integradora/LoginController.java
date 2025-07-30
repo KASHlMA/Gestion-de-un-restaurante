@@ -56,6 +56,7 @@ public class LoginController {
                         abrirPantalla("/com/example/integradora/admin.fxml");
                         break;
                     case "LIDER_MESEROS":
+                    case "LIDER":
                     case "LIDER DE MESEROS":
                         abrirPantalla("/com/example/integradora/lider.fxml");
                         break;
