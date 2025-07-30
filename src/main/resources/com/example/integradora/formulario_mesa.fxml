@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox alignment="CENTER" spacing="18"
+      xmlns="http://javafx.com/javafx/17.0.1"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.FormularioMesaController"
+      style="-fx-padding: 20;">
+    <Label fx:id="tituloLabel" text="Añadir Mesa" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtNombreMesa" promptText="Nombre de la mesa" />
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Estado:"/>
+        <ComboBox fx:id="comboEstado" promptText="Selecciona estado"/>
+    </HBox>
+
+    <HBox spacing="16" alignment="CENTER">
+        <Button text="Cancelar" onAction="#cancelar"/>
+        <Button text="Guardar" onAction="#guardar"/>
+    </HBox>
+</VBox>

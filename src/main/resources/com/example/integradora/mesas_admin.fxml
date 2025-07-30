@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="22"
+      style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 35;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.MesasAdminController">
+
+    <Label text="¡Bienvenido!" styleClass="titulo-bienvenida" />
+
+    <TableView fx:id="tablaMesas" prefWidth="380" styleClass="tabla-admin">
+        <columns>
+            <TableColumn fx:id="colNombreMesa" text="Nombre" prefWidth="120"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="80"/>
+            <TableColumn fx:id="colAcciones" text="" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <Button text="Añadir Mesa" fx:id="btnAnadirMesa" onAction="#abrirAgregarMesa" styleClass="anadir-btn"/>
+</VBox>

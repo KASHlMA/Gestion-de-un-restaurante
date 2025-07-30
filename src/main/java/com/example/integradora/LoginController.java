@@ -53,7 +53,7 @@ public class LoginController {
 
                 switch (rol.toUpperCase()) {
                     case "ADMIN":
-                        mostrarAlerta("Bienvenido", "¡Acceso como ADMIN!", Alert.AlertType.INFORMATION);
+                        abrirPantalla("/com/example/integradora/admin.fxml");
                         break;
                     case "LIDER_MESEROS":
                     case "LIDER DE MESEROS":

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.integradora.AdminController"
+            prefWidth="900" prefHeight="600"
+            stylesheets="@../../../styles/lider.css">
+
+    <!-- Menú lateral izquierdo -->
+    <left>
+        <VBox spacing="25" alignment="TOP_CENTER" styleClass="menu-lateral" prefHeight="600" prefWidth="220">
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 30 0 10 0;">
+                <!-- (Opcional: logo arriba) -->
+                <Label text="Administrador" styleClass="usuario-label"/>
+                <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+            </VBox>
+            <Separator/>
+            <VBox spacing="10" style="-fx-padding: 25 0 0 0;">
+                <Button text=" Mesas"
+                        onAction="#mostrarMesas"
+                        styleClass="menu-btn"
+                        graphicTextGap="12"
+                        prefWidth="180"
+                        alignment="CENTER_LEFT">
+                    <graphic>
+                        <ImageView fitHeight="24" fitWidth="24">
+                            <image>
+                                <Image url="@../../../images/icon-mesas.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button text=" Usuarios"
+                        onAction="#mostrarUsuarios"
+                        styleClass="menu-btn"
+                        graphicTextGap="12"
+                        prefWidth="180"
+                        alignment="CENTER_LEFT">
+                    <graphic>
+                        <ImageView fitHeight="24" fitWidth="24">
+                            <image>
+                                <Image url="@../../../images/icon-usuarios.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button text=" Comida"
+                        onAction="#mostrarComida"
+                        styleClass="menu-btn"
+                        graphicTextGap="12"
+                        prefWidth="180"
+                        alignment="CENTER_LEFT">
+                    <graphic>
+                        <ImageView fitHeight="24" fitWidth="24">
+                            <image>
+                                <Image url="@../../../images/icon-comida.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button text=" Dashboard"
+                        onAction="#mostrarDashboard"
+                        styleClass="menu-btn"
+                        graphicTextGap="12"
+                        prefWidth="180"
+                        alignment="CENTER_LEFT">
+                    <graphic>
+                        <ImageView fitHeight="24" fitWidth="24">
+                            <image>
+                                <Image url="@../../../images/icon-dashboard.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área central dinámica -->
+    <center>
+        <VBox fx:id="contenidoCentral" alignment="TOP_CENTER" spacing="30">
+            <Label text="¡Bienvenido Administrador!" styleClass="titulo-bienvenida"/>
+            <!-- Aquí pones el contenido de cada módulo -->
+        </VBox>
+    </center>
+</BorderPane>
+
+

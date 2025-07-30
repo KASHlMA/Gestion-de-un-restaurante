@@ -131,20 +131,37 @@ public class MeseroController {
 
     // Lógica para solicitar cambios
     private void solicitarCambio(MesaAsignada asignacion) {
-        try {
-            // Cargar el FXML de la ventana de solicitud de cambio
+        try (Connection con = Conexion.conectar()) {
+            int idMesa = obtenerIdMesaPorNombre(asignacion.getMesa());
+            // 1. Revisar si hay solicitud pendiente o aprobada
+            String sql = "SELECT ESTADO FROM SOLICITUDES_CAMBIO WHERE MESERO_ID = ? AND MESA_ID = ? ORDER BY FECHA_SOLICITUD DESC FETCH FIRST 1 ROWS ONLY";
+            try (PreparedStatement stmt = con.prepareStatement(sql)) {
+                stmt.setInt(1, idMesero);
+                stmt.setInt(2, idMesa);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    String estado = rs.getString("ESTADO");
+                    if ("PENDIENTE".equals(estado)) {
+                        mostrarAlerta("Solicitud en espera", "Ya tienes una solicitud pendiente para esta mesa. Espera la respuesta del líder.");
+                        return;
+                    } else if ("APROBADO".equals(estado)) {
+                        // El líder ya aprobó el cambio: navegar a modificar la orden
+                        abrirPantallaModificarOrden(idMesa, asignacion.getMesa(), asignacion.getHorario());
+                        return;
+                    } else if ("DENEGADO".equals(estado)) {
+                        mostrarAlerta("Solicitud denegada", "Tu última solicitud fue denegada. No puedes solicitar de nuevo hasta modificar la orden.");
+                        return;
+                    }
+                }
+            }
+
+            // Si no hay solicitud pendiente ni aprobada ni denegada, abre el popup normal:
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/solicitar_cambio.fxml"));
             Parent root = loader.load();
 
-            // Pasa datos al controller de la solicitud
             SolicitarCambioController controller = loader.getController();
-            controller.setDatos(
-                    idMesero,
-                    obtenerIdMesaPorNombre(asignacion.getMesa()),
-                    asignacion.getMesa()
-            );
+            controller.setDatos(idMesero, idMesa, asignacion.getMesa());
 
-            // Muestra como ventana modal
             Stage stage = new Stage();
             stage.setTitle("Solicitar Cambio");
             stage.setScene(new Scene(root));
@@ -155,6 +172,38 @@ public class MeseroController {
             mostrarAlerta("Error", "No se pudo abrir la ventana de solicitud de cambio.");
         }
     }
+
+    /** Si el líder aprobó, el mesero entra a modificar la orden directamente. */
+    private void abrirPantallaModificarOrden(int idMesa, String nombreMesa, String horario) {
+        try {
+            // Buscar la orden ENVIADA para esa mesa
+            int idOrden = -1;
+            String sql = "SELECT ID FROM ORDENES WHERE MESA_ID = ? AND MESERO_ID = ? AND ESTADO = 'ENVIADA'";
+            try (Connection con = Conexion.conectar();
+                 PreparedStatement stmt = con.prepareStatement(sql)) {
+                stmt.setInt(1, idMesa);
+                stmt.setInt(2, idMesero);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) idOrden = rs.getInt("ID");
+            }
+            if (idOrden == -1) {
+                mostrarAlerta("No se encontró orden", "No hay una orden enviada para modificar.");
+                return;
+            }
+            // Abre la pantalla de Orden en modo edición (puedes usar el mismo OrdenController, asegurándote que permita editar)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/orden.fxml"));
+            Parent root = loader.load();
+            OrdenController ordenController = loader.getController();
+            // Puedes pasar más datos si es necesario (incluyendo modo edición)
+            ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), nombreMesa, horario);
+            Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la pantalla de modificación de orden.");
+        }
+    }
+
 
     private void cerrarCuenta(MesaAsignada asignacion) {
         try (Connection con = Conexion.conectar()) {
