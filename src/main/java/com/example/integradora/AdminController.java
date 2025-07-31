@@ -49,7 +49,7 @@ public class AdminController {
 
     @FXML
     private void mostrarDashboard() {
-        setContenidoCentral("/com/example/integradora/admin_dashboard.fxml");
+        setContenidoCentral("/com/example/integradora/dashboard_calificaciones.fxml");
     }
 
     @FXML

@@ -3,9 +3,6 @@ package com.example.integradora;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -20,9 +17,8 @@ public class CalificarMeseroController {
     @FXML private Button btnEnviar;
 
     private int idMesero; // Recibe el id del mesero calificado
-    private int idOrden;  // Recibe la orden asociada
+    private int idOrden;  // Recibe la orden asociada (si usas orden)
 
-    // Para pasar datos antes de mostrar pantalla
     public void setDatos(int idMesero, int idOrden) {
         this.idMesero = idMesero;
         this.idOrden = idOrden;
@@ -30,10 +26,8 @@ public class CalificarMeseroController {
 
     @FXML
     public void initialize() {
-        // Poner fecha actual
         labelFecha.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-        // Solo permite seleccionar de izquierda a derecha (estilo estrellas)
         ToggleButton[] stars = {star1, star2, star3, star4, star5};
         for (int i = 0; i < stars.length; i++) {
             final int score = i + 1;
@@ -65,7 +59,6 @@ public class CalificarMeseroController {
             return;
         }
 
-        // Guardar en la base de datos (ajusta nombres de tabla/campos si es necesario)
         String sql = "INSERT INTO CALIFICACIONES (MESERO_ID, NOMBRE_CLIENTE, CALIFICACION, COMENTARIO, FECHA) VALUES (?, ?, ?, ?, SYSDATE)";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -80,10 +73,8 @@ public class CalificarMeseroController {
             return;
         }
 
-
         mostrarAlerta("¡Gracias por tu calificación!");
 
-        // Regresa a login o cierra la ventana (ajusta el flujo a lo que necesites)
         Stage stage = (Stage) btnEnviar.getScene().getWindow();
         stage.close();
     }

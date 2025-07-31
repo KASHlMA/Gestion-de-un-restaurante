@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.DetalleComentariosController"
+      spacing="20" alignment="TOP_CENTER" style="-fx-background-color: #eaf4fa; -fx-padding: 40;">
+    <Label text="¡Bienvenido!" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+    <HBox alignment="CENTER_RIGHT" prefWidth="680">
+        <Label text="Ordenar por:" style="-fx-font-size: 13px;"/>
+        <ComboBox fx:id="comboOrden" prefWidth="120"/>
+    </HBox>
+    <TableView fx:id="tablaComentarios">
+        <columns>
+            <TableColumn fx:id="colMesero" text="Mesero"/>
+            <TableColumn fx:id="colCliente" text="Cliente"/>
+            <TableColumn fx:id="colComentario" text="Comentario"/>
+            <TableColumn fx:id="colFecha" text="Fecha"/>
+            <TableColumn fx:id="colCalificacion" text="Calificación"/>
+        </columns>
+    </TableView>
+
+
+</VBox>

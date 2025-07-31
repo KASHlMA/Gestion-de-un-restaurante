@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.integradora.DashboardCalificacionesController"
+      alignment="TOP_CENTER" spacing="14" style="-fx-padding: 40; -fx-background-color: #eaf4fa;">
+    <Label text="¡Bienvenido!" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+    <VBox alignment="CENTER" style="-fx-background-color: #fff; -fx-padding: 24; -fx-border-color: #23A4F8; -fx-border-width: 2; -fx-border-radius: 14; -fx-background-radius: 12;">
+        <Label text="Dashboard de Calificaciones" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <Label text="Resumen de Opiniones y Desempeño de Meseros" style="-fx-font-size: 13px;"/>
+        <HBox spacing="24" alignment="CENTER">
+            <VBox alignment="CENTER">
+                <Label text="☆ Calificación Promedio" />
+                <Label fx:id="lblPromedio" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+            </VBox>
+            <VBox alignment="CENTER">
+                <Label text="🗨 Comentarios Recibidos"/>
+                <Label fx:id="lblComentarios" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+            </VBox>
+            <VBox alignment="CENTER">
+                <Label text="👑 Mejor Mesero"/>
+                <Label fx:id="lblMejorMesero" style="-fx-font-size: 16px;"/>
+                <Label fx:id="lblMejorCalificacion" style="-fx-font-size: 14px;"/>
+            </VBox>
+        </HBox>
+        <Separator/>
+        <Label text="Ranking de Meseros" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+        <TableView fx:id="tablaRanking" prefHeight="110">
+            <columns>
+                <TableColumn fx:id="colNombre" text="Mesero" prefWidth="100"/>
+                <TableColumn fx:id="colEstrellas" text="Calificación" prefWidth="120"/>
+                <TableColumn fx:id="colPromedio" text="Promedio" prefWidth="70"/>
+                <TableColumn fx:id="colComentario" text="Comentarios" prefWidth="210"/>
+            </columns>
+        </TableView>
+        <Separator/>
+        <Label text="Comentarios Recientes" style="-fx-font-weight: bold;"/>
+        <ListView fx:id="listaComentarios" prefHeight="70"/>
+        <Button text="Detalles Completos" onAction="#abrirDetalleComentarios" style="-fx-background-color: #23A4F8; -fx-text-fill: white; -fx-font-size: 12px;" alignment="CENTER_RIGHT"/>
+    </VBox>
+</VBox>
