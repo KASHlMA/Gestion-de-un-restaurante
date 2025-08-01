@@ -137,18 +137,16 @@ public class MeseroController {
         try (Connection con = Conexion.conectar()) {
             int idMesa = obtenerIdMesaPorNombre(asignacion.getMesa());
             // 1. Revisar si hay solicitud pendiente o aprobada
-            String sql = "SELECT ESTADO FROM SOLICITUDES_CAMBIO WHERE MESERO_ID = ? AND MESA_ID = ? ORDER BY FECHA_SOLICITUD DESC FETCH FIRST 1 ROWS ONLY";
+            String sql = "SELECT ESTADO FROM SOLICITUDES_CAMBIO WHERE ASIGNACION_ID = ? ORDER BY FECHA_SOLICITUD DESC FETCH FIRST 1 ROWS ONLY";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
-                stmt.setInt(1, idMesero);
-                stmt.setInt(2, idMesa);
+                stmt.setInt(1, asignacion.getAsignacionId());
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
                     String estado = rs.getString("ESTADO");
                     if ("PENDIENTE".equals(estado)) {
-                        mostrarAlerta("Solicitud en espera", "Ya tienes una solicitud pendiente para esta mesa. Espera la respuesta del líder.");
+                        mostrarAlerta("Solicitud en espera", "Ya tienes una solicitud pendiente para esta mesa y horario. Espera la respuesta del líder.");
                         return;
                     } else if ("APROBADO".equals(estado)) {
-                        // El líder ya aprobó el cambio: navegar a modificar la orden
                         abrirPantallaModificarOrden(asignacion.getAsignacionId(), asignacion.getMesa(), asignacion.getHorario());
                         return;
                     } else if ("DENEGADO".equals(estado)) {
@@ -157,6 +155,7 @@ public class MeseroController {
                     }
                 }
             }
+
 
             // Si no hay solicitud pendiente ni aprobada ni denegada, abre el popup normal:
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/solicitar_cambio.fxml"));

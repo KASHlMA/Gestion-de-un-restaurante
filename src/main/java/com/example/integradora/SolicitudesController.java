@@ -17,12 +17,15 @@ public class SolicitudesController {
     @FXML private TableColumn<SolicitudCambio, String> colDescripcion;
     @FXML private TableColumn<SolicitudCambio, String> colEstado;
     @FXML private TableColumn<SolicitudCambio, Void> colAcciones;
+    @FXML private TableColumn<SolicitudCambio, String> colHorario;
+
 
     private ObservableList<SolicitudCambio> solicitudes = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         colMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
+        colHorario.setCellValueFactory(new PropertyValueFactory<>("horario"));
         colMesero.setCellValueFactory(new PropertyValueFactory<>("mesero"));
         colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
@@ -87,9 +90,12 @@ public class SolicitudesController {
 
     private void cargarSolicitudes() {
         solicitudes.clear();
-        String sql = "SELECT s.ID, m.NOMBRE AS mesa, u.NOMBRE AS mesero, s.DESCRIPCION, s.ESTADO " +
+        String sql = "SELECT s.ID, s.ASIGNACION_ID, m.NOMBRE AS mesa, " +
+                "TO_CHAR(am.HORARIO_INICIO, 'HH12:MI AM') || ' a ' || TO_CHAR(am.HORARIO_FIN, 'HH12:MI AM') AS horario, " +
+                "u.NOMBRE AS mesero, s.DESCRIPCION, s.ESTADO " +
                 "FROM SOLICITUDES_CAMBIO s " +
-                "LEFT JOIN MESAS m ON s.MESA_ID = m.ID " +
+                "LEFT JOIN ASIGNACIONES_MESAS am ON s.ASIGNACION_ID = am.ID " +
+                "LEFT JOIN MESAS m ON am.MESA_ID = m.ID " +
                 "LEFT JOIN USUARIOS u ON s.MESERO_ID = u.ID " +
                 "ORDER BY s.FECHA_SOLICITUD DESC";
         try (Connection con = Conexion.conectar();
@@ -98,7 +104,9 @@ public class SolicitudesController {
             while (rs.next()) {
                 solicitudes.add(new SolicitudCambio(
                         rs.getInt("ID"),
+                        rs.getInt("ASIGNACION_ID"),
                         rs.getString("mesa"),
+                        rs.getString("horario"),
                         rs.getString("mesero"),
                         rs.getString("descripcion"),
                         rs.getString("estado")
@@ -111,6 +119,7 @@ public class SolicitudesController {
         }
     }
 
+
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, mensaje);
         alert.setTitle(titulo);
@@ -121,22 +130,29 @@ public class SolicitudesController {
     // Modelo para la tabla
     public static class SolicitudCambio {
         private final int id;
+        private final int asignacionId;
         private final String mesa;
+        private final String horario;
         private final String mesero;
         private final String descripcion;
         private final String estado;
 
-        public SolicitudCambio(int id, String mesa, String mesero, String descripcion, String estado) {
+        public SolicitudCambio(int id, int asignacionId, String mesa, String horario, String mesero, String descripcion, String estado) {
             this.id = id;
+            this.asignacionId = asignacionId;
             this.mesa = mesa;
+            this.horario = horario;
             this.mesero = mesero;
             this.descripcion = descripcion;
             this.estado = estado;
         }
         public int getId() { return id; }
+        public int getAsignacionId() { return asignacionId; }
         public String getMesa() { return mesa; }
+        public String getHorario() { return horario; }
         public String getMesero() { return mesero; }
         public String getDescripcion() { return descripcion; }
         public String getEstado() { return estado; }
     }
+
 }
