@@ -93,7 +93,8 @@ public class MeseroController {
                 "(SELECT o.ESTADO FROM ORDENES o WHERE o.MESA_ID = m.ID AND o.MESERO_ID = ? ORDER BY o.FECHA DESC FETCH FIRST 1 ROWS ONLY) AS ORDEN_ESTADO " +
                 "FROM ASIGNACIONES_MESAS am " +
                 "JOIN MESAS m ON am.MESA_ID = m.ID " +
-                "WHERE am.MESERO_ID = ?";
+                "WHERE am.MESERO_ID = ? " +
+                "AND m.ESTADO = 'ACTIVO'";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, idMesero);
@@ -112,6 +113,7 @@ public class MeseroController {
             mostrarAlerta("Error", "No se pudieron cargar tus mesas asignadas.");
         }
     }
+
 
 
     // Abrir pantalla para tomar orden
