@@ -10,9 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 import java.sql.*;
 import java.util.*;
 
@@ -34,31 +32,29 @@ public class OrdenController {
     private String nombreMesero;
     private String nombreMesa;
     private String horario;
+    private int idAsignacion; // NUEVO
 
     // Lista de filas de la orden
     private final ObservableList<FilaOrden> filas = FXCollections.observableArrayList();
 
     // Método llamado desde el MeseroController para inicializar la pantalla
-    public void setDatosMesa(int idMesero, String nombreMesero, String nombreMesa, String horario) {
+    public void setDatosMesa(int idMesero, String nombreMesero, String nombreMesa, String horario, int idAsignacion) {
         this.idMesero = idMesero;
         this.nombreMesero = nombreMesero;
         this.nombreMesa = nombreMesa;
         this.horario = horario;
+        this.idAsignacion = idAsignacion;
         labelMesaYHorario.setText("Mesa Asignada: " + nombreMesa + " - " + horario);
         labelMesero.setText(nombreMesero);
     }
 
     @FXML
     public void initialize() {
-        // Cargar combos desde la base de datos
         cargarCategoriasYPlatillos();
-
-        // Configurar las columnas de la tabla
         colCategoria.setCellValueFactory(cell -> cell.getValue().categoriaProperty());
         colPlatillo.setCellValueFactory(cell -> cell.getValue().platilloProperty());
         colCantidad.setCellValueFactory(cell -> cell.getValue().cantidadProperty());
 
-        // CellFactory para columna de categoría (ComboBox)
         colCategoria.setCellFactory(param -> {
             final ComboBox<String> combo = new ComboBox<>(categorias);
             return new TableCell<>() {
@@ -82,8 +78,6 @@ public class OrdenController {
                 }
             };
         });
-
-        // CellFactory para columna de platillo (ComboBox dependiente)
         colPlatillo.setCellFactory(param -> {
             final ComboBox<String> combo = new ComboBox<>();
             return new TableCell<>() {
@@ -106,8 +100,6 @@ public class OrdenController {
                 }
             };
         });
-
-        // CellFactory para columna de cantidad (TextField editable)
         colCantidad.setCellFactory(param -> {
             final TextField textField = new TextField();
             return new TableCell<>() {
@@ -124,8 +116,6 @@ public class OrdenController {
                 }
             };
         });
-
-        // Botón eliminar para cada fila
         colAcciones.setCellFactory(param -> new TableCell<>() {
             private final Button btnEliminar = new Button("🗑");
             {
@@ -140,15 +130,10 @@ public class OrdenController {
                 setGraphic(empty ? null : btnEliminar);
             }
         });
-
-        // Inicia con una fila
         tablaOrden.setItems(filas);
         agregarFilaOrden();
     }
 
-    /**
-     * Carga categorías y platillos agrupados desde la base.
-     */
     private void cargarCategoriasYPlatillos() {
         categorias.clear();
         platillosPorCategoria.clear();
@@ -173,9 +158,6 @@ public class OrdenController {
         }
     }
 
-    /**
-     * Agrega una nueva fila vacía para ordenar un platillo.
-     */
     @FXML
     private void agregarFilaOrden() {
         filas.add(new FilaOrden());
@@ -186,7 +168,7 @@ public class OrdenController {
      */
     @FXML
     private void realizarOrden() {
-        // 1. Validación de campos
+        // Validaciones previas
         for (FilaOrden fila : filas) {
             if (fila.getCategoria() == null || fila.getPlatillo() == null || fila.getCantidad() == null ||
                     fila.getCategoria().isEmpty() || fila.getPlatillo().isEmpty() || fila.getCantidad().isEmpty()) {
@@ -201,34 +183,32 @@ public class OrdenController {
                 return;
             }
         }
-
         try (Connection con = Conexion.conectar()) {
             con.setAutoCommit(false);
 
             int mesaId = obtenerIdMesaPorNombre(nombreMesa);
 
-            // 👉 Primero busca si ya hay una orden ABIERTA para esta mesa y este mesero
+            // Busca si ya hay una orden ABIERTA para esta asignación
             int idOrden = -1;
-            String sqlCheck = "SELECT ID FROM ORDENES WHERE MESA_ID = ? AND MESERO_ID = ? AND ESTADO = 'ABIERTA'";
+            String sqlCheck = "SELECT ID FROM ORDENES WHERE ASIGNACION_ID = ? AND ESTADO = 'ABIERTA'";
             try (PreparedStatement stmt = con.prepareStatement(sqlCheck)) {
-                stmt.setInt(1, mesaId);
-                stmt.setInt(2, idMesero);
+                stmt.setInt(1, idAsignacion);
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) idOrden = rs.getInt("ID");
             }
-
             // Si no existe, crea una nueva
             if (idOrden == -1) {
-                String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO) VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA')";
+                String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO, ASIGNACION_ID) VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA', ?)";
                 try (PreparedStatement stmt = con.prepareStatement(sqlOrden, new String[]{"ID"})) {
                     stmt.setInt(1, mesaId);
                     stmt.setInt(2, idMesero);
+                    stmt.setInt(3, idAsignacion);
                     stmt.executeUpdate();
                     ResultSet rs = stmt.getGeneratedKeys();
                     if (rs.next()) idOrden = rs.getInt(1);
                 }
             } else {
-                // Si existe, elimina los detalles anteriores para actualizar la orden (opcional)
+                // Si existe, elimina los detalles anteriores para actualizar la orden
                 String sqlDel = "DELETE FROM DETALLE_ORDEN WHERE ORDEN_ID = ?";
                 try (PreparedStatement stmt = con.prepareStatement(sqlDel)) {
                     stmt.setInt(1, idOrden);
@@ -268,13 +248,6 @@ public class OrdenController {
         }
     }
 
-
-
-
-
-    /**
-     * Busca el ID de la mesa por nombre
-     */
     private int obtenerIdMesaPorNombre(String nombreMesa) throws Exception {
         String sql = "SELECT ID FROM MESAS WHERE NOMBRE = ?";
         try (Connection con = Conexion.conectar();
@@ -286,9 +259,6 @@ public class OrdenController {
         }
     }
 
-    /**
-     * Busca el ID del platillo por nombre
-     */
     private int obtenerIdPlatilloPorNombre(String nombrePlatillo) throws Exception {
         String sql = "SELECT ID FROM PLATILLOS WHERE NOMBRE = ?";
         try (Connection con = Conexion.conectar();
@@ -300,9 +270,6 @@ public class OrdenController {
         }
     }
 
-    /**
-     * Muestra una alerta informativa
-     */
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, mensaje);
         alert.setTitle(titulo);
@@ -310,9 +277,6 @@ public class OrdenController {
         alert.showAndWait();
     }
 
-    /**
-     * Clase modelo para cada fila de la orden
-     */
     public static class FilaOrden {
         private final SimpleStringProperty categoria = new SimpleStringProperty();
         private final SimpleStringProperty platillo = new SimpleStringProperty();
@@ -331,7 +295,6 @@ public class OrdenController {
         public SimpleStringProperty cantidadProperty() { return cantidad; }
     }
 
-    // Botón "Volver Atrás"
     @FXML
     private void volverAtras(ActionEvent event) {
         try {
@@ -347,7 +310,6 @@ public class OrdenController {
         }
     }
 
-    // Botón "Cerrar Sesión"
     @FXML
     private void cerrarSesion(ActionEvent event) {
         try {

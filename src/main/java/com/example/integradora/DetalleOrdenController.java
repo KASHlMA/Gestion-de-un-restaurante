@@ -114,7 +114,14 @@ public class DetalleOrdenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/orden.fxml"));
             Parent root = loader.load();
             OrdenController ordenController = loader.getController();
-            ordenController.setDatosMesa(idMesero, nombreMesero, obtenerNombreMesaPorOrden(idOrden), obtenerHorarioPorOrden(idOrden));
+            int asignacionId = obtenerAsignacionIdPorOrden(idOrden);
+            ordenController.setDatosMesa(
+                    idMesero,
+                    nombreMesero,
+                    obtenerNombreMesaPorOrden(idOrden),
+                    obtenerHorarioPorOrden(idOrden),
+                    asignacionId
+            );
             Stage stage = (Stage) tablaDetalle.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (Exception e) {
@@ -122,6 +129,18 @@ public class DetalleOrdenController {
             mostrarAlerta("Error", "No se pudo abrir la edición de la orden.");
         }
     }
+
+    private int obtenerAsignacionIdPorOrden(int idOrden) throws Exception {
+        String sql = "SELECT ASIGNACION_ID FROM ORDENES WHERE ID = ?";
+        try (Connection con = Conexion.conectar();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, idOrden);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt("ASIGNACION_ID");
+            else throw new Exception("No se encontró la asignación para la orden: " + idOrden);
+        }
+    }
+
 
     /**
      * Botón para enviar la orden a cocina (cambia el estado y deshabilita edición)

@@ -88,20 +88,19 @@ public class MeseroController {
      */
     private void cargarMesasAsignadas() {
         datos.clear();
-        String sql = "SELECT m.NOMBRE AS mesa, " +
-                "TO_CHAR(am.HORARIO_INICIO, 'HH12:MI AM') || ' a ' || TO_CHAR(am.HORARIO_FIN, 'HH12:MI AM') AS horario, " +
-                "(SELECT o.ESTADO FROM ORDENES o WHERE o.MESA_ID = m.ID AND o.MESERO_ID = ? ORDER BY o.FECHA DESC FETCH FIRST 1 ROWS ONLY) AS ORDEN_ESTADO " +
-                "FROM ASIGNACIONES_MESAS am " +
-                "JOIN MESAS m ON am.MESA_ID = m.ID " +
-                "WHERE am.MESERO_ID = ? " +
-                "AND m.ESTADO = 'ACTIVO'";
+        String sql = "SELECT am.ID as asignacion_id, m.NOMBRE AS mesa, "
+                + "TO_CHAR(am.HORARIO_INICIO, 'HH12:MI AM') || ' a ' || TO_CHAR(am.HORARIO_FIN, 'HH12:MI AM') AS horario, "
+                + "(SELECT o.ESTADO FROM ORDENES o WHERE o.ASIGNACION_ID = am.ID ORDER BY o.FECHA DESC FETCH FIRST 1 ROWS ONLY) AS ORDEN_ESTADO "
+                + "FROM ASIGNACIONES_MESAS am "
+                + "JOIN MESAS m ON am.MESA_ID = m.ID "
+                + "WHERE am.MESERO_ID = ? AND m.ESTADO = 'ACTIVO'";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, idMesero);
-            stmt.setInt(2, idMesero);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 datos.add(new MesaAsignada(
+                        rs.getInt("asignacion_id"),
                         rs.getString("mesa"),
                         rs.getString("horario"),
                         rs.getString("ORDEN_ESTADO"))
@@ -116,13 +115,15 @@ public class MeseroController {
 
 
 
+
     // Abrir pantalla para tomar orden
     private void tomarOrden(MesaAsignada asignacion) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/orden.fxml"));
             Parent root = loader.load();
             OrdenController ordenController = loader.getController();
-            ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), asignacion.getMesa(), asignacion.getHorario());
+            // AHORA PASA EL ASIGNACION_ID
+            ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), asignacion.getMesa(), asignacion.getHorario(), asignacion.getAsignacionId());
             Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (Exception e) {
@@ -148,7 +149,7 @@ public class MeseroController {
                         return;
                     } else if ("APROBADO".equals(estado)) {
                         // El líder ya aprobó el cambio: navegar a modificar la orden
-                        abrirPantallaModificarOrden(idMesa, asignacion.getMesa(), asignacion.getHorario());
+                        abrirPantallaModificarOrden(asignacion.getAsignacionId(), asignacion.getMesa(), asignacion.getHorario());
                         return;
                     } else if ("DENEGADO".equals(estado)) {
                         mostrarAlerta("Solicitud denegada", "Tu última solicitud fue denegada. No puedes solicitar de nuevo hasta modificar la orden.");
@@ -176,15 +177,14 @@ public class MeseroController {
     }
 
     /** Si el líder aprobó, el mesero entra a modificar la orden directamente. */
-    private void abrirPantallaModificarOrden(int idMesa, String nombreMesa, String horario) {
+
+    private void abrirPantallaModificarOrden(int asignacionId, String nombreMesa, String horario) {
         try {
-            // Buscar la orden ENVIADA para esa mesa
             int idOrden = -1;
-            String sql = "SELECT ID FROM ORDENES WHERE MESA_ID = ? AND MESERO_ID = ? AND ESTADO = 'ENVIADA'";
+            String sql = "SELECT ID FROM ORDENES WHERE ASIGNACION_ID = ? AND ESTADO = 'ENVIADA'";
             try (Connection con = Conexion.conectar();
                  PreparedStatement stmt = con.prepareStatement(sql)) {
-                stmt.setInt(1, idMesa);
-                stmt.setInt(2, idMesero);
+                stmt.setInt(1, asignacionId);
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) idOrden = rs.getInt("ID");
             }
@@ -192,12 +192,10 @@ public class MeseroController {
                 mostrarAlerta("No se encontró orden", "No hay una orden enviada para modificar.");
                 return;
             }
-            // Abre la pantalla de Orden en modo edición (puedes usar el mismo OrdenController, asegurándote que permita editar)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/orden.fxml"));
             Parent root = loader.load();
             OrdenController ordenController = loader.getController();
-            // Puedes pasar más datos si es necesario (incluyendo modo edición)
-            ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), nombreMesa, horario);
+            ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), nombreMesa, horario, asignacionId);
             Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (Exception e) {
@@ -209,15 +207,11 @@ public class MeseroController {
 
     private void cerrarCuenta(MesaAsignada asignacion) {
         try (Connection con = Conexion.conectar()) {
-            // 1. Buscar el ID de la mesa
-            int mesaId = obtenerIdMesaPorNombre(asignacion.getMesa());
-
-            // 2. Buscar el ID de la orden ENVIADA (que aún no está cerrada)
+            // Buscar el ID de la orden ENVIADA (por ASIGNACION_ID)
             int idOrden = -1;
-            String sqlOrden = "SELECT ID FROM ORDENES WHERE MESA_ID = ? AND MESERO_ID = ? AND ESTADO = 'ENVIADA'";
+            String sqlOrden = "SELECT ID FROM ORDENES WHERE ASIGNACION_ID = ? AND ESTADO = 'ENVIADA'";
             try (PreparedStatement stmt = con.prepareStatement(sqlOrden)) {
-                stmt.setInt(1, mesaId);
-                stmt.setInt(2, idMesero);
+                stmt.setInt(1, asignacion.getAsignacionId());
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) idOrden = rs.getInt("ID");
             }
@@ -227,18 +221,15 @@ public class MeseroController {
                 return;
             }
 
-            // 3. Cambia el estado de la orden a "CERRADA"
+            // Cambia el estado de la orden a "CERRADA"
             String sqlCerrar = "UPDATE ORDENES SET ESTADO = 'CERRADA' WHERE ID = ?";
             try (PreparedStatement stmt = con.prepareStatement(sqlCerrar)) {
                 stmt.setInt(1, idOrden);
                 stmt.executeUpdate();
             }
 
-            // 4. Navega al resumen/finalización
+            // Navega al resumen/finalización
             mostrarResumenFinal(idOrden);
-
-            // 5. Actualiza la tabla de mesas (opcional, ya que cambia de pantalla)
-            // cargarMesasAsignadas();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,14 +290,17 @@ public class MeseroController {
 
     // Clase modelo con estado de la orden
     public static class MesaAsignada {
+        private final int asignacionId;
         private final String mesa;
         private final String horario;
         private final String ordenEstado;
-        public MesaAsignada(String mesa, String horario, String ordenEstado) {
+        public MesaAsignada(int asignacionId, String mesa, String horario, String ordenEstado) {
+            this.asignacionId = asignacionId;
             this.mesa = mesa;
             this.horario = horario;
-            this.ordenEstado = ordenEstado; // "ABIERTA", "ENVIADA", "CERRADA"...
+            this.ordenEstado = ordenEstado;
         }
+        public int getAsignacionId() { return asignacionId; }
         public String getMesa() { return mesa; }
         public String getHorario() { return horario; }
         public String getOrdenEstado() { return ordenEstado; }
