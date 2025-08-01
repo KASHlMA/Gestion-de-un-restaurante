@@ -55,7 +55,7 @@ public class AsignacionController {
     /** Llena la lista de mesas disponibles desde la base de datos. */
     private void cargarMesas() {
         mesasDisponibles.clear();
-        String sql = "SELECT NOMBRE FROM MESAS";
+        String sql = "SELECT NOMBRE FROM MESAS WHERE ESTADO = 'ACTIVO'";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -67,6 +67,7 @@ public class AsignacionController {
             mostrarAlerta("Error", "No se pudieron cargar las mesas.");
         }
     }
+
 
     /** Acción del botón "+ Añadir otra mesa". */
     @FXML
