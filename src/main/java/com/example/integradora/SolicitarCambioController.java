@@ -17,31 +17,33 @@ public class SolicitarCambioController {
     private int idMesero;
     private int idMesa;
 
-    public void setDatos(int idMesero, int idMesa, String nombreMesa) {
+    private int asignacionId;
+
+    // Recibe el id de la asignación
+    public void setDatos(int idMesero, int idMesa, String nombreMesa, int asignacionId) {
         this.idMesero = idMesero;
         this.idMesa = idMesa;
+        this.asignacionId = asignacionId;
         labelMesa.setText("Mesa: " + nombreMesa);
 
-        // Espera a que la ventana esté visible antes de intentar cerrarla
         Platform.runLater(this::verificarSolicitudPendiente);
     }
 
+
+
     // Verifica si ya hay una solicitud PENDIENTE
     private void verificarSolicitudPendiente() {
-        String sql = "SELECT ESTADO FROM SOLICITUDES_CAMBIO WHERE MESERO_ID = ? AND MESA_ID = ? AND ESTADO = 'PENDIENTE'";
+        String sql = "SELECT ESTADO FROM SOLICITUDES_CAMBIO WHERE ASIGNACION_ID = ? AND ESTADO = 'PENDIENTE'";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, idMesero);
-            stmt.setInt(2, idMesa);
+            stmt.setInt(1, asignacionId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 txtDescripcion.setDisable(true);
                 btnEnviar.setDisable(true);
                 Alert alerta = new Alert(Alert.AlertType.INFORMATION,
-                        "Ya tienes una solicitud pendiente para esta mesa. Espera la respuesta del líder.");
+                        "Ya tienes una solicitud pendiente para esta mesa y horario. Espera la respuesta del líder.");
                 alerta.showAndWait();
-
-                // Solo cierra la ventana si realmente está visible
                 if (btnEnviar.getScene() != null && btnEnviar.getScene().getWindow() != null) {
                     Stage stage = (Stage) btnEnviar.getScene().getWindow();
                     stage.close();
@@ -52,6 +54,7 @@ public class SolicitarCambioController {
         }
     }
 
+
     @FXML
     private void enviarSolicitud() {
         String motivo = txtDescripcion.getText().trim();
@@ -59,15 +62,15 @@ public class SolicitarCambioController {
             new Alert(Alert.AlertType.WARNING, "Por favor, explica el motivo.").showAndWait();
             return;
         }
-        String sql = "INSERT INTO SOLICITUDES_CAMBIO (MESERO_ID, MESA_ID, TIPO, DESCRIPCION) VALUES (?, ?, 'MESA', ?)";
+        String sql = "INSERT INTO SOLICITUDES_CAMBIO (ASIGNACION_ID, MESERO_ID, MESA_ID, TIPO, DESCRIPCION, FECHA_SOLICITUD, ESTADO) VALUES (?, ?, ?, 'MESA', ?, SYSTIMESTAMP, 'PENDIENTE')";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, idMesero);
-            stmt.setInt(2, idMesa);
-            stmt.setString(3, motivo);
+            stmt.setInt(1, asignacionId);
+            stmt.setInt(2, idMesero);
+            stmt.setInt(3, idMesa);
+            stmt.setString(4, motivo);
             stmt.executeUpdate();
             new Alert(Alert.AlertType.INFORMATION, "¡Solicitud enviada correctamente!").showAndWait();
-            // Cierra solo si la ventana está visible
             if (btnEnviar.getScene() != null && btnEnviar.getScene().getWindow() != null) {
                 Stage stage = (Stage) btnEnviar.getScene().getWindow();
                 stage.close();
@@ -77,4 +80,5 @@ public class SolicitarCambioController {
             new Alert(Alert.AlertType.ERROR, "No se pudo enviar la solicitud.").showAndWait();
         }
     }
+
 }

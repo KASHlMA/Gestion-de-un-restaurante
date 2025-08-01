@@ -163,7 +163,8 @@ public class MeseroController {
             Parent root = loader.load();
 
             SolicitarCambioController controller = loader.getController();
-            controller.setDatos(idMesero, idMesa, asignacion.getMesa());
+            controller.setDatos(idMesero, idMesa, asignacion.getMesa(), asignacion.getAsignacionId());
+
 
             Stage stage = new Stage();
             stage.setTitle("Solicitar Cambio");
