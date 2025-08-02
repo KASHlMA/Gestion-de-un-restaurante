@@ -1,6 +1,9 @@
 package com.example.integradora;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.sql.Connection;
@@ -75,9 +78,22 @@ public class CalificarMeseroController {
 
         mostrarAlerta("¡Gracias por tu calificación!");
 
-        Stage stage = (Stage) btnEnviar.getScene().getWindow();
-        stage.close();
+        // ----------- AQUI EL CAMBIO -----------
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/mesero.fxml"));
+            Parent root = loader.load();
+            MeseroController meseroController = loader.getController();
+            meseroController.setIdMesero(idMesero, "Mesero"); // Pasa el nombre real si lo tienes
+
+            Stage stage = (Stage) btnEnviar.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("No se pudo regresar al menú de Mesas.");
+        }
+        // ---------------------------------------
     }
+
 
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, mensaje);

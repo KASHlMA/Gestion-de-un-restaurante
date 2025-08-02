@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.integradora.DetalleOrdenLiderController"
+            prefWidth="500" prefHeight="400">
+    <top>
+        <Label fx:id="labelInfo" style="-fx-font-size:18px; -fx-padding:15px;" text="Detalle de la Orden"/>
+    </top>
+    <center>
+        <TableView fx:id="tablaDetalles" prefWidth="450">
+            <columns>
+                <TableColumn fx:id="colPlatillo" text="Platillo" prefWidth="160"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
+                <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+                <TableColumn fx:id="colTotal" text="Total" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <VBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding:10;">
+            <Label fx:id="labelTotalGeneral" style="-fx-font-size:16px;"/>
+            <Button text="Cerrar" onAction="#cerrarVentana" prefWidth="100"/>
+        </VBox>
+    </bottom>
+</BorderPane>

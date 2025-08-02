@@ -37,11 +37,14 @@
             <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
             <TableView fx:id="tablaMesas" prefWidth="600">
                 <columns>
-                    <TableColumn fx:id="colMesas" text="Mesas" prefWidth="200"/>
-                    <TableColumn fx:id="colMesero" text="Mesero" prefWidth="200"/>
-                    <TableColumn fx:id="colHorario" text="Horario" prefWidth="200"/>
+                    <TableColumn fx:id="colMesas" text="Mesas" prefWidth="140"/>
+                    <TableColumn fx:id="colMesero" text="Mesero" prefWidth="140"/>
+                    <TableColumn fx:id="colHorario" text="Horario" prefWidth="140"/>
+                    <TableColumn fx:id="colEstado" text="Estado Cuenta" prefWidth="100"/>
+                    <TableColumn fx:id="colDetalle" text="Detalle" prefWidth="80"/>
                 </columns>
             </TableView>
+
         </VBox>
     </center>
 </BorderPane>
