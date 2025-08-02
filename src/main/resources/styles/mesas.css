@@ -1,0 +1,112 @@
+/* Fondo general blanco con sombra para el "card" */
+.vbox {
+    -fx-background-color: #fff;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(one-pass-box, #bfd7e633, 10, 0.08, 0, 2);
+    -fx-padding: 35;
+}
+
+/* Título */
+.titulo-bienvenida {
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #25344a;
+    -fx-padding: 0 0 16 0;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+}
+
+/* Tabla */
+.tabla-admin, .table-view {
+    -fx-background-color: #f9fcfe;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 4;
+    -fx-border-color: #d1dbe6;
+    -fx-table-cell-border-color: #e4e8f1;
+    -fx-effect: dropshadow(one-pass-box, #c2d1e333, 2, 0, 0, 2);
+    -fx-font-size: 15px;
+}
+
+/* Encabezado */
+.table-view .column-header-background {
+    -fx-background-color: #25344a;
+    -fx-background-radius: 10 10 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #25344a;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fff;
+    -fx-alignment: CENTER;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #d1dbe6;
+    -fx-padding: 9 0 9 0;
+}
+
+/* Filas normales */
+.table-view .table-row-cell {
+    -fx-background-color: #fff;
+    -fx-font-size: 14px;
+}
+.table-view .table-row-cell:filled:selected,
+.table-view .table-row-cell:filled:selected:hover {
+    -fx-background-color: #e5f3ff;
+    -fx-text-fill: #25344a;
+}
+
+/* BOTONES ACCIONES DENTRO DE LA TABLA */
+.boton-ver {
+    -fx-background-color: #e2f1fa;
+    -fx-text-fill: #25344a;
+    -fx-background-radius: 8;
+    -fx-font-size: 1em;
+    -fx-padding: 5 12 5 12;
+    -fx-cursor: hand;
+    -fx-border-color: #c8e2fa;
+    -fx-border-width: 1.2;
+    -fx-margin-right: 8px;
+}
+.boton-eliminar {
+    -fx-background-color: #ffdede;
+    -fx-text-fill: #a52222;
+    -fx-background-radius: 8;
+    -fx-font-size: 1em;
+    -fx-padding: 5 12 5 12;
+    -fx-cursor: hand;
+    -fx-border-color: #f7bebe;
+    -fx-border-width: 1.2;
+    -fx-margin-left: 8px;
+}
+
+/* HBox de acciones */
+.hbox-acciones {
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-padding: 0 3 0 3;
+}
+
+/* Botón "Añadir Mesa" */
+.anadir-btn {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 8;
+    -fx-font-weight: 700;
+    -fx-font-size: 1.05em;
+    -fx-padding: 8 26 8 26;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf66, 2, 0.1, 0, 1);
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.anadir-btn:hover {
+    -fx-background-color: #25344a;
+}
+
+/* ScrollBar minimal */
+.table-view .scroll-bar:vertical .thumb,
+.table-view .scroll-bar:horizontal .thumb {
+    -fx-background-color: #b2bfcf55;
+    -fx-background-radius: 5;
+}
+.table-view .scroll-bar:vertical, .table-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}

@@ -34,14 +34,19 @@ public class MesasAdminController {
         // Botón editar/eliminar en cada fila
         colAcciones.setCellFactory(param -> new TableCell<>() {
             private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑");
-            private final HBox box = new HBox(10, btnEditar, btnEliminar);
+            private final Button btnEliminar = new Button("🗑️");
+            private final HBox box = new HBox(15, btnEditar, btnEliminar); // espacio mayor
+
             {
+                box.getStyleClass().add("hbox-acciones");
+                btnEditar.getStyleClass().add("boton-ver");
+                btnEliminar.getStyleClass().add("boton-eliminar");
                 btnEditar.setOnAction(e -> abrirEditarMesa(getTableView().getItems().get(getIndex())));
                 btnEliminar.setOnAction(e -> eliminarMesa(getTableView().getItems().get(getIndex()).getId()));
-                btnEditar.setStyle("-fx-background-color: #D0E9F7; -fx-border-radius: 6; -fx-cursor: hand;");
-                btnEliminar.setStyle("-fx-background-color: #FFD6D6; -fx-border-radius: 6; -fx-cursor: hand;");
+                btnEditar.setText("Editar");
+                btnEliminar.setText("Eliminar");
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);

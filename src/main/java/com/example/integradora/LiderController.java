@@ -27,6 +27,8 @@ public class LiderController {
     @FXML private VBox contenidoCentral;
     @FXML private TableColumn<AsignacionMesa, String> colEstado;
     @FXML private TableColumn<AsignacionMesa, Void> colDetalle;
+    @FXML private Label tituloLabel;
+
 
 
     private ObservableList<AsignacionMesa> datos = FXCollections.observableArrayList();
@@ -133,10 +135,15 @@ public class LiderController {
     @FXML
     private void mostrarMesas() {
         // Puedes reconstruir el VBox inicial aquí, si necesitas limpiar la pantalla central
+
+        cargarDatosTabla();
+        tituloLabel.setVisible(true);
         contenidoCentral.getChildren().setAll(
-                new Label("¡Bienvenido!"), // Si tienes un label de bienvenida aparte
+                tituloLabel,
                 tablaMesas
         );
+
+
         // O vuelve a cargar los datos si lo deseas:
         // cargarDatosTabla();
     }

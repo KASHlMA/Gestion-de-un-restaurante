@@ -1,0 +1,151 @@
+.root, .anchor-pane {
+    -fx-background-color: #e6eef3;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+}
+
+/* --- Etiquetas Perfil --- */
+.usuario-label {
+    -fx-font-size: 1.15em;
+    -fx-text-fill: #222;
+    -fx-font-weight: 700;
+    -fx-padding: 0 0 2 0;
+}
+#labelNombreMesero {
+    -fx-font-size: 1em;
+    -fx-text-fill: #37525b;
+    -fx-font-weight: 600;
+    -fx-padding: 0 0 6 0;
+}
+
+/* --- Botón Cerrar Sesión --- */
+.cerrar-sesion {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 7;
+    -fx-font-size: 1em;
+    -fx-font-weight: 600;
+    -fx-padding: 6 24 6 24;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf55, 2, 0.12, 0, 1);
+    -fx-cursor: hand;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-border-width: 0;
+}
+.cerrar-sesion:hover {
+    -fx-background-color: #253342;
+}
+
+/* --- Título Bienvenida --- */
+.titulo-bienvenida {
+    -fx-font-size: 2.1em;
+    -fx-font-weight: 800;
+    -fx-text-fill: #253342;
+    -fx-padding: 0 0 18 0;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+}
+
+/* --- CARD con sombra para la tabla --- */
+.vbox, .tabla-card {
+    -fx-background-color: #fff;
+    -fx-background-radius: 16;
+    -fx-padding: 32 42 32 42;
+    -fx-effect: dropshadow(gaussian, #b7c7d2aa, 14, 0.14, 0, 1.5);
+}
+
+
+/* --- TABLA --- */
+.table-view {
+    -fx-background-color: #fff;
+    -fx-border-color: #d1dbe6;
+    -fx-border-radius: 18;
+    -fx-padding: 10;
+    -fx-table-cell-border-color: #e4e8f1;
+    -fx-effect: dropshadow(one-pass-box, #25344a18, 2, 0, 0, 2);
+    -fx-font-size: 16px;
+}
+.table-view .column-header-background {
+    -fx-background-color: #25344a;
+    -fx-background-radius: 13 13 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #25344a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8fafc;
+    -fx-alignment: CENTER;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #d1dbe6;
+    -fx-padding: 10 0 10 0;
+}
+.table-view .table-row-cell {
+    -fx-background-color: #fff;
+    -fx-table-cell-border-color: #e0e0e0;
+    -fx-font-size: 15px;
+    -fx-text-fill: #black;
+}
+.table-view .table-row-cell:filled:selected,
+.table-view .table-row-cell:filled:selected:hover {
+    -fx-background-color: #daeaf6;
+    -fx-text-fill: #2a4057;
+}
+.table-view .button {
+    -fx-background-color: #eaf0f7;
+    -fx-text-fill: #25344a;
+    -fx-background-radius: 14;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-border-color: #d1dbe6;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(one-pass-box, #cccccc33, 1, 0, 0, 1);
+    -fx-font-weight: bold;
+}
+.table-view .button:hover {
+    -fx-background-color: #4898d3;
+    -fx-text-fill: #fff;
+}
+
+.label {
+    -fx-font-family: "Segoe UI", "Arial";
+}
+.table-view .column-header,
+.table-view .column-header .label,
+.table-view .filler {
+    -fx-text-fill: #fff !important;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-font-size: 16px;
+}
+.table-view .column-header .label {
+    -fx-effect: dropshadow(one-pass-box, #0008, 2, 0, 0, 1);
+}
+
+/* --- BOTONES dentro de la tabla --- */
+.button, .boton-accion {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-font-weight: 700;
+    -fx-background-radius: 7;
+    -fx-padding: 5 14 5 14;
+    -fx-font-size: 1em;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf44, 1.5, 0.1, 0, 1);
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.button:hover, .boton-accion:hover {
+    -fx-background-color: #253342;
+}
+.button:disabled, .boton-accion:disabled {
+    -fx-background-color: #d3e0ea;
+    -fx-text-fill: #7d8a97;
+}
+
+/* --- ScrollBar estético --- */
+.table-view .scroll-bar:vertical .thumb,
+.table-view .scroll-bar:horizontal .thumb {
+    -fx-background-color: #b2bfcf66;
+    -fx-background-radius: 6;
+}
+.table-view .scroll-bar:vertical, .table-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+

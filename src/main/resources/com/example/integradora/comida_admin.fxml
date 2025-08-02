@@ -5,7 +5,7 @@
 <VBox xmlns="http://javafx.com/javafx/17.0.12"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.integradora.ComidaAdminController"
-      alignment="TOP_CENTER" spacing="18" style="-fx-padding: 20;">
+      alignment="TOP_CENTER" spacing="18" style="-fx-padding: 20;" stylesheets="@../../../styles/mesero.css">
     <Label text="Gestión de Comida" styleClass="titulo-bienvenida"/>
     <HBox spacing="12">
         <Button fx:id="btnAgregarPlatillo" text="Agregar Platillo" onAction="#abrirAgregarPlatillo"/>

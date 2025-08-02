@@ -6,20 +6,23 @@
 
 <StackPane alignment="CENTER" prefHeight="550" prefWidth="900" stylesheets="@../../../styles/login.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.LoginController">
 
-    <!-- Imagen de fondo -->
-    <ImageView fitHeight="550" fitWidth="900" preserveRatio="false">
+    <!-- Imagen de fondo que cubre toda la ventana -->
+    <ImageView fitHeight="550" fitWidth="900" preserveRatio="false" StackPane.alignment="CENTER">
         <image>
             <Image url="@../../../images/background.png" />
         </image>
     </ImageView>
 
-    <!-- Tarjeta flotante -->
-    <VBox alignment="CENTER" maxWidth="300" spacing="15" styleClass="login-card">
-        <ImageView fx:id="userIcon" fitWidth="100" preserveRatio="true" />
-        <Label styleClass="login-title" text="INICIO DE SESIÓN" textFill="#e6eef3" />
+
+    <!-- Card flotante de login -->
+    <VBox alignment="CENTER" maxWidth="340" spacing="15" styleClass="login-card">
+        <ImageView fx:id="userIcon" fitHeight="90" fitWidth="90" pickOnBounds="true" preserveRatio="true" styleClass="avatar-img">
+         <image>
+            <Image url="@../../../images/iconUser.png" />
+         </image></ImageView>
+        <Label styleClass="login-title" text="INICIO DE SESIÓN" />
         <TextField fx:id="usernameField" promptText="Usuario" styleClass="login-input" />
         <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="login-input" />
-        <Button text="Inicio de sesión" onAction="#login" styleClass="login-button"/>
+        <Button onAction="#login" styleClass="login-button" text="Inicio de sesión" />
     </VBox>
-
 </StackPane>

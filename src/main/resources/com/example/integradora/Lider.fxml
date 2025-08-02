@@ -34,7 +34,7 @@
     <center>
         <VBox fx:id="contenidoCentral" alignment="TOP_CENTER" spacing="30">
             <!-- Contenido inicial: la tabla de mesas -->
-            <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
+            <Label fx:id="tituloLabel" text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
             <TableView fx:id="tablaMesas" prefWidth="600">
                 <columns>
                     <TableColumn fx:id="colMesas" text="Mesas" prefWidth="140"/>

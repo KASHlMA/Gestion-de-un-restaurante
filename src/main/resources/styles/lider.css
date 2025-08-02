@@ -1,45 +1,163 @@
 .root {
-    -fx-background-color: #e9f1f4;
+    -fx-background-color: #eaf0f7;
 }
 
 .menu-lateral {
-    -fx-background-color: #22333b;
+    -fx-background-color: #19242F;
+    -fx-padding: 0;
+    -fx-pref-width: 230px;
 }
 
 .usuario-label {
-    -fx-text-fill: #fff;
+    -fx-font-size: 19px;
+    -fx-font-family: "Segoe UI", "Arial";
     -fx-font-weight: bold;
+    -fx-text-fill: #fff;
+    -fx-padding: 8 0 6 0;
 }
 
 .cerrar-sesion {
-    -fx-background-color: #c94a53;
+    -fx-background-color: linear-gradient(to bottom, #e87171, #cf3b3b);
     -fx-text-fill: white;
-    -fx-background-radius: 8;
-}.menu-btn {
-     -fx-background-color: transparent;
-     -fx-text-fill: #fff;
-     -fx-font-size: 14px;
-     -fx-alignment: CENTER_LEFT;
-     -fx-max-width: 180;
-     -fx-cursor: hand;
-     -fx-background-radius: 8;
-     -fx-border-radius: 8;
-     -fx-padding: 8 18 8 18;
-     -fx-border-color: transparent;
- }
-
-.menu-btn:hover {
-    -fx-background-color: #30414a;
-    -fx-text-fill: #ffd166;
-    -fx-border-color: #ffd166;
-    -fx-border-width: 1.5;
-    -fx-border-radius: 8;
+    -fx-font-weight: bold;
+    -fx-background-radius: 32;
+    -fx-padding: 12 30;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #bb2b2b33, 3, 0, 0, 2);
+    -fx-border-color: #fff3;
+    -fx-border-width: 0 0 2 0;
+    -fx-margin: 12 0 0 0;
+}
+.cerrar-sesion:hover {
+    -fx-background-color: #c73b3b;
 }
 
-
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #eaf0f7;
+    -fx-font-size: 15px;
+    -fx-padding: 13 16 13 28;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 16;
+    -fx-font-family: "Segoe UI", "Arial";
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(one-pass-box, #00000011, 2, 0, 0, 2);
+}
+.menu-btn:hover, .menu-btn:selected {
+    -fx-background-color: #25344a;
+    -fx-text-fill: #fff;
+}
 
 .titulo-bienvenida {
-    -fx-font-size: 32px;
+    -fx-font-size: 42px;
+    -fx-font-family: "Montserrat", "Segoe UI", "Arial";
     -fx-font-weight: bold;
-    -fx-text-fill: #222;
+    -fx-text-fill: #2a4057;
+    -fx-padding: 30 0 20 0;
+    -fx-effect: dropshadow(one-pass-box, #0004, 2, 0, 0, 2);
 }
+
+.separator {
+    -fx-background-color: #27364b;
+}
+
+/* --- TABLA ESTILO --- */
+.table-view {
+    -fx-background-color: #fff;
+    -fx-border-color: #d1dbe6;
+    -fx-border-radius: 18;
+    -fx-padding: 10;
+    -fx-table-cell-border-color: #e4e8f1;
+    -fx-effect: dropshadow(one-pass-box, #25344a18, 2, 0, 0, 2);
+    -fx-font-size: 16px;
+}
+.table-view .column-header-background {
+    -fx-background-color: #25344a;
+    -fx-background-radius: 13 13 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #25344a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8fafc;
+    -fx-alignment: CENTER;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #d1dbe6;
+    -fx-padding: 10 0 10 0;
+}
+.table-view .table-row-cell {
+    -fx-background-color: #fff;
+    -fx-table-cell-border-color: #e0e0e0;
+    -fx-font-size: 15px;
+    -fx-text-fill: #black;
+}
+.table-view .table-row-cell:filled:selected,
+.table-view .table-row-cell:filled:selected:hover {
+    -fx-background-color: #daeaf6;
+    -fx-text-fill: #2a4057;
+}
+.table-view .button {
+    -fx-background-color: #eaf0f7;
+    -fx-text-fill: #25344a;
+    -fx-background-radius: 14;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-border-color: #d1dbe6;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(one-pass-box, #cccccc33, 1, 0, 0, 1);
+    -fx-font-weight: bold;
+}
+.table-view .button:hover {
+    -fx-background-color: #4898d3;
+    -fx-text-fill: #fff;
+}
+
+.label {
+    -fx-font-family: "Segoe UI", "Arial";
+}
+.table-view .column-header,
+.table-view .column-header .label,
+.table-view .filler {
+    -fx-text-fill: #fff !important;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-font-size: 16px;
+}
+.table-view .column-header .label {
+    -fx-effect: dropshadow(one-pass-box, #0008, 2, 0, 0, 1);
+}
+
+.solicitud-titulo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #253342; /* o el color oscuro de tu paleta */
+    -fx-padding: 20 0 20 0;
+    -fx-alignment: center;
+    -fx-font-family: 'Montserrat', 'Arial', sans-serif;
+}
+
+.boton-aceptar {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-padding: 2 10 2 10;
+}
+
+.boton-denegar {
+    -fx-background-color: #e57373;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-padding: 2 10 2 10;
+}
+
+.boton-eliminar {
+    -fx-background-color: #757575;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-padding: 2 10 2 10;
+}
+

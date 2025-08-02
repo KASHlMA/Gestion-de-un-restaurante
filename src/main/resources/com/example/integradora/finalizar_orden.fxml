@@ -4,42 +4,39 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.integradora.FinalizarOrdenController"
-            prefWidth="800" prefHeight="600"
+            prefWidth="1000" prefHeight="700"
             stylesheets="@../../../styles/mesero.css">
 
-    <!-- Encabezado -->
-    <VBox alignment="TOP_RIGHT" layoutX="650" layoutY="25" spacing="5">
+    <!-- Encabezado usuario y cerrar sesión (arriba a la derecha) -->
+    <VBox alignment="TOP_RIGHT" spacing="5"
+          AnchorPane.topAnchor="25" AnchorPane.rightAnchor="35">
         <Label text="Mesero:" styleClass="usuario-label"/>
         <Label fx:id="labelNombreMesero" text="Juan Pablo Perez"/>
         <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
     </VBox>
 
-    <!-- Bienvenida y ruta -->
-    <VBox alignment="CENTER" spacing="10" layoutX="0" layoutY="40" prefWidth="800">
+    <!-- Contenido central (todo alineado y el total a la derecha de la tarjeta) -->
+    <VBox alignment="CENTER" spacing="18" prefWidth="500"
+          AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
-        <Label fx:id="labelRuta" text="Mesas Asignadas/Orden Mesa 3"
-               style="-fx-font-size: 12px; -fx-text-fill: #444444;"/>
+        <Label fx:id="labelRuta" text="Mesas Asignadas/Resumen Final"
+               style="-fx-font-size: 13px; -fx-text-fill: #444444;"/>
+
+        <!-- CARD blanca para la tabla -->
+        <VBox alignment="CENTER" spacing="12" styleClass="tabla-card" maxWidth="480" minWidth="420">
+            <TableView fx:id="tablaResumen" prefWidth="420" maxWidth="460" minHeight="220">
+                <columns>
+                    <TableColumn fx:id="colPlatillo" text="Cuenta" prefWidth="260"/>
+                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
+                </columns>
+            </TableView>
+            <!-- HBox del total, pegado a la derecha dentro de la card -->
+            <HBox alignment="CENTER_RIGHT" spacing="10" prefWidth="420">
+                <Label text="Total:" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                <Label fx:id="labelTotal" text="0.00" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            </HBox>
+        </VBox>
+
+        <Button fx:id="btnFinalizar" text="Finalizar" onAction="#finalizar" styleClass="cerrar-sesion" maxWidth="120"/>
     </VBox>
-
-    <!-- Tabla de resumen de cuenta -->
-    <VBox alignment="CENTER" spacing="20" layoutX="250" layoutY="120" prefWidth="400">
-        <TableView fx:id="tablaResumen" prefWidth="400">
-            <columns>
-                <TableColumn fx:id="colPlatillo" text="Cuenta" prefWidth="250"/>
-                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="70"/>
-            </columns>
-        </TableView>
-
-        <!-- Total -->
-        <HBox alignment="CENTER_RIGHT" spacing="10" prefWidth="400">
-            <Label text="Total:" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-            <Label fx:id="labelTotal" text="0" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-        </HBox>
-    </VBox>
-
-    <!-- Botón para finalizar o volver -->
-    <HBox alignment="CENTER" spacing="20" layoutX="330" layoutY="400" prefWidth="160">
-        <Button fx:id="btnFinalizar" text="Finalizar" onAction="#finalizar" styleClass="cerrar-sesion"/>
-    </HBox>
-
 </AnchorPane>

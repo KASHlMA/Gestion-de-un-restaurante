@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+
 <VBox xmlns="http://javafx.com/javafx/17.0.12"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.integradora.OrdenController"
-      alignment="TOP_CENTER" spacing="10" prefWidth="900" prefHeight="600">
+      alignment="TOP_CENTER" spacing="15" prefWidth="900" prefHeight="700"
+      style="-fx-background-color: #e6eef3;"
+      stylesheets="@../../../styles/orden.css">
 
     <!-- Barra de navegación superior -->
-    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10 20 10 20;">
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 14 30 10 30;">
         <Button text="← Atrás" onAction="#volverAtras" styleClass="boton-atras"/>
-        <Label text="Mesero: " />
+        <Label text="Mesero:" />
         <Label fx:id="labelMesero" text="(Nombre mesero)" style="-fx-font-weight: bold;"/>
         <Pane HBox.hgrow="ALWAYS"/>
         <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
@@ -18,17 +21,21 @@
     <Label fx:id="labelMesaYHorario" text="Mesa Asignada: " styleClass="label-mesa"/>
     <Label text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
 
-    <TableView fx:id="tablaOrden" prefWidth="800">
-        <columns>
-            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="200"/>
-            <TableColumn fx:id="colPlatillo" text="Nombre del Platillo" prefWidth="260"/>
-            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="110"/>
-            <TableColumn fx:id="colAcciones" text=" " prefWidth="70"/>
-        </columns>
-    </TableView>
+    <!-- Card blanca para la tabla -->
+    <VBox alignment="CENTER" spacing="18" styleClass="tabla-card" maxWidth="620" minWidth="520">
+        <TableView fx:id="tablaOrden" prefWidth="580" minHeight="230">
+            <columns>
+                <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="160"/>
+                <TableColumn fx:id="colPlatillo" text="Nombre del Platillo" prefWidth="220"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="90"/>
+                <TableColumn fx:id="colAcciones" text=" " prefWidth="70"/>
+            </columns>
+        </TableView>
 
-    <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 10 0;">
-        <Button text="+ Añadir platillo" onAction="#agregarFilaOrden" styleClass="boton-verde" maxWidth="200"/>
-        <Button text="Realizar la orden" onAction="#realizarOrden" styleClass="boton-oscuro" maxWidth="200"/>
-    </HBox>
+        <!-- Botones debajo de la tabla, centrados -->
+        <HBox alignment="CENTER" spacing="16">
+            <Button text="+ Añadir platillo" onAction="#agregarFilaOrden" styleClass="boton-verde" maxWidth="200"/>
+            <Button text="Realizar la orden" onAction="#realizarOrden" styleClass="boton-oscuro" maxWidth="200"/>
+        </HBox>
+    </VBox>
 </VBox>

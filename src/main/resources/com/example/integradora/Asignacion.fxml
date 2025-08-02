@@ -7,29 +7,26 @@
 
 <StackPane xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.example.integradora.AsignacionController">
+           fx:controller="com.example.integradora.AsignacionController"
+           stylesheets="@../../../styles/asignacion.css">
+
 
     <!-- Tarjeta central blanca con sombra -->
     <VBox alignment="CENTER" prefWidth="500" styleClass="asignacion-card" spacing="25">
-        <!-- Título -->
         <Label text="Asignación de Plan" styleClass="asignacion-title"/>
-
-        <!-- Selector de mesero -->
         <HBox alignment="CENTER_LEFT" spacing="10">
-            <Label text="Mesero" style="-fx-font-weight: bold;"/>
+            <Label text="Mesero" styleClass="meserotxt" style="-fx-font-weight: bold;"/>
             <ComboBox fx:id="comboMesero" promptText="Selecciona un mesero" prefWidth="230"/>
         </HBox>
-
-        <!-- Tabla de mesas y horarios -->
-        <VBox fx:id="mesasBox" spacing="10">
-            <!-- Aquí se agregan filas dinámicamente -->
-        </VBox>
-
-        <!-- Botón para añadir otra mesa -->
+        <!-- Aquí el ScrollPane con el VBox -->
+        <ScrollPane fx:id="scrollMesas" fitToWidth="true" maxHeight="320" styleClass="mesas-scroll">
+            <content>
+                <VBox fx:id="mesasBox" spacing="10"/>
+            </content>
+        </ScrollPane>
         <Button fx:id="btnAgregarMesa" text="+ Añadir otra mesa" styleClass="boton-verde" maxWidth="180" onAction="#agregarFilaMesa"/>
-
-        <!-- Botón para asignar plan -->
         <Button fx:id="btnAsignarPlan" text="Asignar Plan" styleClass="boton-oscuro" maxWidth="180" onAction="#asignarPlan"/>
     </VBox>
+
 
 </StackPane>

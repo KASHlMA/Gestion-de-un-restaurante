@@ -6,7 +6,8 @@
       style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 35;"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.integradora.MesasAdminController">
+      fx:controller="com.example.integradora.MesasAdminController"
+      stylesheets="@../../../styles/mesas.css">
 
     <Label text="¡Bienvenido!" styleClass="titulo-bienvenida" />
 
@@ -14,7 +15,7 @@
         <columns>
             <TableColumn fx:id="colNombreMesa" text="Nombre" prefWidth="120"/>
             <TableColumn fx:id="colEstado" text="Estado" prefWidth="80"/>
-            <TableColumn fx:id="colAcciones" text="" prefWidth="120"/>
+            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="220"/>
         </columns>
     </TableView>
 

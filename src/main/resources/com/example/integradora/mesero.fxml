@@ -1,29 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600" prefWidth="900" stylesheets="@../../../styles/mesero.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.MeseroController">
+<BorderPane prefHeight="700" prefWidth="1100" stylesheets="@../../../styles/mesero.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.MeseroController">
 
-    <!-- Perfil y botón cerrar -->
-    <VBox alignment="TOP_RIGHT" layoutX="700" layoutY="25" spacing="5">
-        <Label styleClass="usuario-label" text="Mesero:" />
-        <Label fx:id="labelNombreMesero" text="Juan Pablo Perez" />
-        <Button onAction="#cerrarSesion" styleClass="cerrar-sesion" text="Cerrar Sesión" />
-    </VBox>
+    <!-- Barra superior: Perfil y botón cerrar -->
+    <top>
+        <HBox alignment="TOP_RIGHT" spacing="18">
+            <padding>
+                <Insets bottom="0" left="0" right="32" top="18" />
+            </padding>
+         <ImageView fitHeight="50.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../images/mesero.png" />
+            </image></ImageView>
+            <VBox alignment="CENTER_RIGHT">
+                <Label styleClass="usuario-label" text="Mesero:" />
+                <Label fx:id="labelNombreMesero" text="Juan Pablo Perez" />
+            </VBox>
+            <Button onAction="#cerrarSesion" styleClass="cerrar-sesion" text="Cerrar Sesión" />
+        </HBox>
 
-    <!-- Centro: tabla de mesas asignadas -->
-    <VBox alignment="CENTER" layoutX="250" layoutY="110" prefWidth="400" spacing="20">
-        <Label styleClass="titulo-bienvenida" text="¡Bienvenido!" />
-        <TableView fx:id="tablaMesasMesero" prefHeight="400.0" prefWidth="444.0">
-            <columns>
-                <TableColumn fx:id="colMesa" prefWidth="120" text="Mesa Asignada" />
-                <TableColumn fx:id="colHorario" prefWidth="120" text="Horario" />
-                <TableColumn fx:id="colTomarOrden" prefWidth="90" text="Tomar Orden" />
-                <TableColumn fx:id="colCambios" prefWidth="110" text="Realizar Cambios" />
-                <TableColumn fx:id="colCerrarCuenta" prefWidth="90" text="Cerrar Cuenta" />
-            </columns>
-        </TableView>
+    </top>
 
-    </VBox>
-</AnchorPane>
+    <!-- Centro: tabla centrada vertical y horizontal -->
+    <center>
+        <VBox alignment="CENTER" spacing="25">
+            <Label styleClass="titulo-bienvenida" text="¡Bienvenido!" />
+            <VBox alignment="CENTER" maxWidth="850" styleClass="tabla-card">
+                <TableView fx:id="tablaMesasMesero" prefHeight="410" prefWidth="830">
+                    <columns>
+                        <TableColumn fx:id="colMesa" prefWidth="170" text="Mesa Asignada" />
+                        <TableColumn fx:id="colHorario" prefWidth="150" text="Horario" />
+                        <TableColumn fx:id="colTomarOrden" prefWidth="120" text="Tomar Orden" />
+                        <TableColumn fx:id="colCambios" prefWidth="160" text="Realizar Cambios" />
+                        <TableColumn fx:id="colCerrarCuenta" prefWidth="140" text="Cerrar Cuenta" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

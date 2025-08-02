@@ -93,10 +93,17 @@ public class FinalizarOrdenController {
         }
     }
 
-
     @FXML
     private void cerrarSesion(javafx.event.ActionEvent event) {
-        finalizar(); // Puedes reutilizar
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cerrar la sesión.");
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {

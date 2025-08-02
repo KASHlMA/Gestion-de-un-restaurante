@@ -1,0 +1,106 @@
+/* FONDO GENERAL */
+.root, .anchor-pane {
+    -fx-background-color: #243242;
+}
+
+/* CARD CENTRAL */
+.vbox {
+    -fx-background-color: #fff;
+    -fx-background-radius: 18;
+    -fx-padding: 36 40 36 40;
+    -fx-effect: dropshadow(one-pass-box, #223a4a33, 18, 0.14, 0, 2);
+    -fx-spacing: 26;
+    -fx-alignment: center;
+    -fx-border-radius: 18;
+}
+
+/* TITULO */
+.label {
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+}
+.vbox > .label:first-child {
+    -fx-font-size: 1.4em;
+    -fx-font-weight: 800;
+    -fx-text-fill: #223a4a;
+    -fx-padding: 0 0 12 0;
+}
+
+/* INPUTS Y LABELS */
+.text-field, .text-area {
+    -fx-background-color: #f5f8fb;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #ccd6df;
+    -fx-border-width: 1;
+    -fx-font-size: 1em;
+    -fx-text-fill: #233242;
+    -fx-padding: 7 10 7 10;
+}
+.text-area {
+    -fx-font-size: 1em;
+}
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #4898d3;
+    -fx-background-color: #fafdff;
+}
+
+/* LABELS IZQUIERDA */
+.hbox > .label {
+    -fx-font-size: 1em;
+    -fx-text-fill: #37525b;
+    -fx-font-weight: 600;
+}
+
+/* FECHA */
+#labelFecha {
+    -fx-text-fill: #444;
+    -fx-font-size: 1em;
+    -fx-font-weight: 500;
+}
+
+/* BOTÓN ENVIAR */
+.enviar-btn, .button {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-font-weight: 700;
+    -fx-background-radius: 7;
+    -fx-padding: 7 30 7 30;
+    -fx-font-size: 1.06em;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf33, 1.5, 0.1, 0, 1);
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.enviar-btn:hover, .button:hover {
+    -fx-background-color: #223a4a;
+}
+
+/* ESTRELLAS DE CALIFICACION */
+.estrella {
+    -fx-background-color: #edf2f7;
+    -fx-background-radius: 7;
+    -fx-border-color: #b3bed1;
+    -fx-border-width: 1.2;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-width: 32px;
+    -fx-max-height: 32px;
+    -fx-padding: 0;
+    -fx-shape: "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z";
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(one-pass-box, #223a4a18, 2, 0.1, 0, 1);
+}
+.estrella:selected, .estrella:armed, .estrella:focused {
+    -fx-background-color: #ffd700;
+    -fx-border-color: #ffae00;
+    -fx-effect: dropshadow(one-pass-box, #ffe98088, 6, 0.4, 0, 1);
+}
+.estrella:hover {
+    -fx-background-color: #fff8dc;
+    -fx-border-color: #ffe980;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+}

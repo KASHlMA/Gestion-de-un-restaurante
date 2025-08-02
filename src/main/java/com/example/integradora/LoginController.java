@@ -27,9 +27,11 @@ public class LoginController {
      */
     @FXML
     private void login() {
+
         // Obtiene el texto ingresado por el usuario en los campos
         String usuario = usernameField.getText();
         String contrasena = passwordField.getText();
+
 
         // Ahora tu consulta también trae el ID y el nombre real
         String sql = "SELECT ID, NOMBRE, ROL, ESTADO FROM USUARIOS WHERE USUARIO = ? AND CONTRASENA = ?";

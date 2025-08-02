@@ -1,0 +1,148 @@
+.root, .vbox, .anchor-pane {
+    -fx-background-color: #e6eef3;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+}
+
+/* Barra superior y navegación */
+.hbox {
+    -fx-background-color: transparent;
+    -fx-padding: 10 30 10 30;
+}
+
+/* Botón Atrás */
+.boton-atras {
+    -fx-background-color: transparent;
+    -fx-text-fill: #37525b;
+    -fx-font-weight: bold;
+    -fx-font-size: 1.08em;
+    -fx-padding: 6 14 6 14;
+    -fx-border-color: #37525b;
+    -fx-border-width: 1;
+    -fx-background-radius: 7;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf33, 1, 0.05, 0, 1);
+}
+.boton-atras:hover {
+    -fx-background-color: #daeaf6;
+}
+
+/* Etiquetas y títulos */
+.titulo-bienvenida {
+    -fx-font-size: 2.2em;
+    -fx-font-weight: 800;
+    -fx-text-fill: #253342;
+    -fx-padding: 0 0 10 0;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-alignment: center;
+}
+.label-mesa {
+    -fx-font-size: 1.13em;
+    -fx-font-weight: 600;
+    -fx-text-fill: #25344a;
+    -fx-padding: 4 0 4 0;
+}
+
+/* Card blanca de la tabla */
+.tabla-card {
+    -fx-background-color: #fff;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(one-pass-box, #b9c6cf33, 10, 0.12, 0, 2);
+    -fx-padding: 32 40 32 40;
+    -fx-spacing: 20;
+    -fx-border-radius: 16;
+    -fx-alignment: center;
+}
+
+/* TABLA */
+.table-view {
+    -fx-background-color: #fff;
+    -fx-border-color: #d1dbe6;
+    -fx-border-radius: 16;
+    -fx-padding: 5;
+    -fx-table-cell-border-color: #e4e8f1;
+    -fx-font-size: 15.5px;
+}
+.table-view .column-header-background {
+    -fx-background-color: #25344a;
+    -fx-background-radius: 13 13 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #25344a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8fafc;
+    -fx-alignment: CENTER;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #d1dbe6;
+    -fx-padding: 10 0 10 0;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #fff !important;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(one-pass-box, #0005, 2, 0, 0, 1);
+}
+.table-view .table-row-cell {
+    -fx-background-color: #fff;
+    -fx-font-size: 15px;
+}
+.table-view .table-row-cell:filled:selected,
+.table-view .table-row-cell:filled:selected:hover {
+    -fx-background-color: #daeaf6;
+    -fx-text-fill: #2a4057;
+}
+
+/* ScrollBar */
+.table-view .scroll-bar:vertical .thumb,
+.table-view .scroll-bar:horizontal .thumb {
+    -fx-background-color: #b2bfcf66;
+    -fx-background-radius: 6;
+}
+.table-view .scroll-bar:vertical, .table-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+/* Botón oscuro (orden) */
+.boton-oscuro {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 7;
+    -fx-font-size: 1em;
+    -fx-font-weight: 600;
+    -fx-padding: 7 28 7 28;
+    -fx-cursor: hand;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf55, 1.5, 0.1, 0, 1);
+}
+.boton-oscuro:hover { -fx-background-color: #253342; }
+
+/* Botón verde (añadir platillo) */
+.boton-verde {
+    -fx-background-color: #4fc485;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 7;
+    -fx-font-size: 1em;
+    -fx-font-weight: 600;
+    -fx-padding: 7 20 7 20;
+    -fx-cursor: hand;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf33, 1, 0, 0, 1);
+}
+.boton-verde:hover { -fx-background-color: #35a869; }
+
+/* Botón cerrar sesión */
+.cerrar-sesion {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 7;
+    -fx-font-size: 1em;
+    -fx-font-weight: 600;
+    -fx-padding: 6 24 6 24;
+    -fx-cursor: hand;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(one-pass-box, #b2bfcf55, 1.5, 0.1, 0, 1);
+}
+.cerrar-sesion:hover { -fx-background-color: #253342; }

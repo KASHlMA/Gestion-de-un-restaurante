@@ -1,0 +1,72 @@
+/* Fondo y card */
+.root, .anchor-pane {
+    -fx-background-color: #f5f9fc;
+    -fx-font-family: 'Montserrat', Arial, sans-serif;
+}
+.vbox {
+    -fx-background-color: #fff;
+    -fx-background-radius: 18;
+    -fx-padding: 32 40 32 40;
+    -fx-spacing: 22;
+    -fx-effect: dropshadow(one-pass-box, #bed7ec44, 10, 0.12, 0, 4);
+}
+
+/* Título GRANDE */
+.titulo-solicitud {
+    -fx-font-size: 2em;
+    -fx-text-fill: #233242;
+    -fx-font-weight: 800;
+    -fx-alignment: center;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Nombre de la mesa, menos grande y azul */
+.mesa-label {
+    -fx-font-size: 1.18em;
+    -fx-font-weight: 700;
+    -fx-text-fill: #37525b;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Labels secundarios (Motivo:) */
+.label-secundario {
+    -fx-font-size: 1em;
+    -fx-font-weight: 500;
+    -fx-text-fill: #37525b;
+    -fx-padding: 2 0 2 0;
+}
+
+/* TextArea */
+.text-area {
+    -fx-background-color: #f8fbff;
+    -fx-background-radius: 10;
+    -fx-border-color: #25344a;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-font-size: 1.08em;
+    -fx-padding: 8 10 8 10;
+    -fx-text-fill: #222;
+    -fx-effect: dropshadow(one-pass-box, #bed7ec22, 1.5, 0.08, 0, 1);
+}
+.text-area:focused {
+    -fx-border-color: #4898d3;
+    -fx-background-color: #f5f9fc;
+}
+
+/* Botón */
+.enviar-btn {
+    -fx-background-color: #233242;
+    -fx-text-fill: #fff;
+    -fx-font-size: 1.18em;
+    -fx-font-weight: bold;
+    -fx-background-radius: 11;
+    -fx-padding: 7 40 7 40;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #bed7ec33, 2, 0.09, 0, 1.5);
+    -fx-border-width: 0;
+}
+.enviar-btn:hover {
+    -fx-background-color: #37525b;
+    -fx-text-fill: #fff;
+    -fx-effect: dropshadow(one-pass-box, #4898d399, 4, 0.18, 0, 1);
+}

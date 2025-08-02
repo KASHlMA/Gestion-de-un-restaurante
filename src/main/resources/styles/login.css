@@ -1,31 +1,86 @@
-.root {
-    -fx-font-family: "Segoe UI", sans-serif;
+/* Fondo del StackPane: la imagen ya está en FXML. */
+
+/* Glassmorphism para el card */
+.login-card {
+    -fx-background-color: rgba(18,38,54,0.81);  /* azul oscuro translúcido */
+    -fx-background-radius: 26;
+    -fx-padding: 34 38 34 38;
+    -fx-effect: dropshadow(gaussian, #00000055, 30, 0.25, 0, 4);
+    -fx-spacing: 20;
+    -fx-alignment: center;
+    -fx-max-width: 350px;
+    -fx-min-width: 310px;
+    -fx-max-height: 380px;
 }
 
-.login-box {
-    -fx-padding: 40;
-    -fx-background-color: rgba(30, 16, 63, 0.85); /* fondo morado semitransparente */
-    -fx-background-radius: 20;
+/* Opcional: si quieres un blur detrás del card */
+.login-card {
+    -fx-background-insets: 0, 1 1 1 1;
+    -fx-background-blur-type: gaussian;
 }
 
-.input {
-    -fx-background-color: #d3d3d3;
-    -fx-background-radius: 15;
-    -fx-padding: 10;
-    -fx-pref-width: 250;
-}
-
-.login-button {
-    -fx-background-color: #E6EEF3;
-    -fx-text-fill: black;
-    -fx-font-weight: bold;
-    -fx-background-radius: 15;
-    -fx-cursor: hand;
-    -fx-padding: 10 20;
-}
-
-.title {
-    -fx-text-fill: white;
+/* Título elegante */
+.login-title {
     -fx-font-size: 18px;
+    -fx-font-family: 'Segoe UI Semibold', 'Arial', sans-serif;
     -fx-font-weight: bold;
+    -fx-padding: 0 0 12 0;
+    -fx-text-fill: #eaf6fa;
+    -fx-alignment: center;
+}
+
+/* Campos de texto modernos */
+.login-input {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #77d7fd;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-prompt-text-fill: #aec4da;
+    -fx-padding: 8 0 6 0;
+    -fx-background-insets: 0;
+    -fx-effect: null;
+    -fx-min-width: 200px;
+}
+
+.login-input:focused {
+    -fx-border-color: #4fbcff;
+    -fx-border-width: 0 0 2.5 0;
+}
+
+/* Botón login estilizado */
+.login-button {
+    -fx-background-color: linear-gradient(to bottom, #a7e4ff, #ffffff 65%);
+    -fx-background-radius: 22;
+    -fx-text-fill: #19364a;
+    -fx-font-size: 15px;
+    -fx-font-family: 'Segoe UI Semibold', Arial, sans-serif;
+    -fx-font-weight: bold;
+    -fx-padding: 8 30 8 30;
+    -fx-effect: dropshadow(gaussian, #b3d5e4, 8, 0.18, 0, 2);
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-min-width: 190px;
+}
+
+.login-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5fcaff, #c2e9ff 70%);
+    -fx-text-fill: #063e5f;
+}
+
+.login-button:pressed {
+    -fx-background-color: #80daff;
+}
+
+/* Responsive - Ajusta el VBox si la ventana es pequeña (a veces JavaFX no lo soporta, pero puedes limitar el maxWidth/minWidth) */
+
+/* Quita el scroll o margenes blancos del StackPane si tienes */
+.stack-pane, .root {
+    -fx-padding: 0;
+    -fx-background-color: #181b1f;
+}
+.avatar-img {
+    -fx-background-radius: 100;
+    -fx-effect: dropshadow(gaussian, #b3d5e4, 16, 0.18, 0, 2);
+    -fx-padding: 0 0 7 0;
 }

@@ -4,7 +4,8 @@
 
 <AnchorPane prefWidth="800" prefHeight="600" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.integradora.CalificarMeseroController"
-            style="-fx-background-color: #243242;">
+            style="-fx-background-color: #243242;"
+            stylesheets="@../../../styles/calificar.css">
     <VBox alignment="CENTER" spacing="20" prefWidth="450" prefHeight="450" layoutX="175" layoutY="75"
           style="-fx-background-color: white; -fx-background-radius: 10;">
         <Label text="¿Cómo fue tu experiencia con el mesero?" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
