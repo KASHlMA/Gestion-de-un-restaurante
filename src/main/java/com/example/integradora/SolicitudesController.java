@@ -3,7 +3,6 @@ package com.example.integradora;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -39,12 +38,10 @@ public class SolicitudesController {
             private final HBox box = new HBox(5, btnAceptar, btnDenegar, btnEliminar);
 
             {
-                btnAceptar.getStyleClass().add("boton-aceptar");
-                btnDenegar.getStyleClass().add("boton-denegar");
-                btnEliminar.getStyleClass().add("boton-eliminar");
-                box.setAlignment(Pos.CENTER);
+                btnAceptar.setOnAction(e -> manejarSolicitud("APROBADO"));
+                btnDenegar.setOnAction(e -> manejarSolicitud("DENEGADO"));
+                btnEliminar.setOnAction(e -> eliminarSolicitud());
             }
-
 
             @Override
             protected void updateItem(Void item, boolean empty) {
