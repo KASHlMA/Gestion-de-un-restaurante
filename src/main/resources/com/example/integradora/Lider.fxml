@@ -33,11 +33,11 @@
 
 
             <!-- Contenido inicial: la tabla de mesas -->
-            <Label fx:id="tituloLabel" styleClass="titulo-bienvenida" text="¡Bienvenido!" />
+            <Label fx:id="tituloLabel" prefHeight="64.0" prefWidth="250.0" styleClass="titulo-bienvenida" text="¡Bienvenido!" />
             <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Asignadas Hoy" />
 
             <!-- Segunda tabla: SOLO las asignaciones de HOY -->
-            <TableView fx:id="tablaHoy" prefHeight="240">
+            <TableView fx:id="tablaHoy" prefHeight="258.0" prefWidth="670.0">
                 <columns>
                     <TableColumn fx:id="colMesasHoy" prefWidth="160" text="Mesas" />
                     <TableColumn fx:id="colMeseroHoy" prefWidth="180" text="Mesero" />
@@ -49,13 +49,13 @@
             </TableView>
 
             <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Lista de asignaciones completa" />
-            <TableView fx:id="tablaMesas" prefHeight="513.0" prefWidth="670.0">
+            <TableView fx:id="tablaMesas" prefHeight="224.0" prefWidth="670.0">
                 <columns>
                     <TableColumn fx:id="colMesas" prefWidth="140" text="Mesas" />
                     <TableColumn fx:id="colMesero" prefWidth="140" text="Mesero" />
                     <TableColumn fx:id="colHorario" prefWidth="170" text="Horario" />
-                    <TableColumn fx:id="colEstado" prefWidth="141.99996948242188" text="Estado Cuenta" />
                     <TableColumn fx:id="colFecha" prefWidth="120" text="Fecha" />
+                    <TableColumn fx:id="colEstado" prefWidth="141.99996948242188" text="Estado Cuenta" />
                     <TableColumn fx:id="colDetalle" text="Detalle" />
 
                 </columns>

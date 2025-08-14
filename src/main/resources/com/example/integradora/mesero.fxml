@@ -28,20 +28,37 @@
 
     <!-- Centro: tabla centrada vertical y horizontal -->
     <center>
-        <VBox alignment="CENTER" spacing="25">
+        <VBox alignment="TOP_CENTER" spacing="20" prefWidth="1000">
             <Label styleClass="titulo-bienvenida" text="¡Bienvenido!" />
-            <VBox alignment="CENTER" maxWidth="850" styleClass="tabla-card">
-                <TableView fx:id="tablaMesasMesero" prefHeight="410" prefWidth="830">
-                    <columns>
-                        <TableColumn fx:id="colMesa" prefWidth="170" text="Mesa Asignada" />
-                        <TableColumn fx:id="colHorario" prefWidth="150" text="Horario" />
-                        <TableColumn fx:id="colTomarOrden" prefWidth="120" text="Tomar Orden" />
-                        <TableColumn fx:id="colCambios" prefWidth="160" text="Realizar Cambios" />
-                        <TableColumn fx:id="colCerrarCuenta" prefWidth="140" text="Cerrar Cuenta" />
-                    </columns>
-                </TableView>
-            </VBox>
+
+            <!-- ====== HOY ====== -->
+            <Label text="Asignadas Hoy" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+            <TableView fx:id="tablaHoyMesero" prefHeight="240" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colMesaHoy"    prefWidth="200" text="Mesa" />
+                    <TableColumn fx:id="colHorarioHoy" prefWidth="220" text="Horario" />
+                    <TableColumn fx:id="colFechaHoy"   prefWidth="120" text="Fecha" />
+                    <TableColumn fx:id="colTomarOrdenHoy"  prefWidth="140" text="Tomar Orden" />
+                    <TableColumn fx:id="colCambiosHoy"     prefWidth="160" text="Solicitar Cambios" />
+                    <TableColumn fx:id="colCerrarHoy"      prefWidth="140" text="Cerrar Cuenta" />
+                </columns>
+            </TableView>
+
+            <!-- ====== PASADAS ====== -->
+            <Label text="Asignaciones Pasadas" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+            <TableView fx:id="tablaPasadasMesero" prefHeight="260" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colMesaPas"    prefWidth="200" text="Mesa" />
+                    <TableColumn fx:id="colHorarioPas" prefWidth="220" text="Horario" />
+                    <TableColumn fx:id="colFechaPas"   prefWidth="120" text="Fecha" />
+                    <!-- Si quieres, puedes repetir acciones aquí; muchos prefieren solo "Ver Detalle" -->
+                    <TableColumn fx:id="colTomarOrdenPas" prefWidth="140" text="Tomar Orden" />
+                    <TableColumn fx:id="colCambiosPas"    prefWidth="160" text="Solicitar Cambios" />
+                    <TableColumn fx:id="colCerrarPas"     prefWidth="140" text="Cerrar Cuenta" />
+                </columns>
+            </TableView>
         </VBox>
     </center>
+
 
 </BorderPane>

@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+
 import java.sql.*;
 
 public class FinalizarOrdenController {
@@ -23,33 +24,32 @@ public class FinalizarOrdenController {
     @FXML private Button btnFinalizar;
 
     private int idOrden;
+    private int idMesero;
     private String nombreMesero;
     private String ruta;
-    private int idMesero;
 
+    private final ObservableList<ResumenCuenta> resumen = FXCollections.observableArrayList();
 
-    private ObservableList<ResumenCuenta> resumen = FXCollections.observableArrayList();
-
+    /** Llamar justo después de cargar el FXML */
     public void setDatosOrden(int idOrden, int idMesero, String nombreMesero, String ruta) {
         this.idOrden = idOrden;
-        this.idMesero = idMesero; // <-- GUÁRDALO AQUÍ
+        this.idMesero = idMesero;
         this.nombreMesero = nombreMesero;
         this.ruta = ruta;
-        labelNombreMesero.setText(nombreMesero);
-        labelRuta.setText(ruta);
+
+        if (labelNombreMesero != null) labelNombreMesero.setText(nombreMesero);
+        if (labelRuta != null) labelRuta.setText(ruta);
+
         cargarResumen();
     }
 
-
-
     @FXML
     public void initialize() {
-        colPlatillo.setCellValueFactory(cell -> cell.getValue().platilloProperty());
-        colCantidad.setCellValueFactory(cell -> cell.getValue().cantidadProperty());
-        tablaResumen.setItems(resumen);
+        if (colPlatillo != null) colPlatillo.setCellValueFactory(c -> c.getValue().platilloProperty());
+        if (colCantidad != null) colCantidad.setCellValueFactory(c -> c.getValue().cantidadProperty());
+        if (tablaResumen != null) tablaResumen.setItems(resumen);
     }
 
-    // Cargar platillos, cantidad y precios para calcular total
     private void cargarResumen() {
         resumen.clear();
         double total = 0.0;
@@ -72,24 +72,52 @@ public class FinalizarOrdenController {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cargar el resumen de la orden.");
         }
-        labelTotal.setText(String.format("$%.2f", total));
+        if (labelTotal != null) labelTotal.setText(String.format("$%.2f", total));
     }
 
+    // --------------- Botones ---------------
+
+    /** Cerrar definitivamente: marca CERRADA y pasa a calificar */
     @FXML
     private void finalizar() {
-        try {
+        try (Connection con = Conexion.conectar()) {
+            String sqlCerrar = "UPDATE ORDENES SET ESTADO = 'CERRADA' WHERE ID = ?";
+            try (PreparedStatement stmt = con.prepareStatement(sqlCerrar)) {
+                stmt.setInt(1, idOrden);
+                stmt.executeUpdate();
+            }
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/calificar_mesero.fxml"));
             Parent root = loader.load();
 
-            // Pasa los datos al controller de calificación
             CalificarMeseroController controller = loader.getController();
             controller.setDatos(idMesero, idOrden);
 
             Stage stage = (Stage) btnFinalizar.getScene().getWindow();
-            stage.getScene().setRoot(root);
+            stage.getScene().setRoot(root);            stage.setMaximized(true);
+
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo mostrar la pantalla de calificación.");
+            mostrarAlerta("Error", "No se pudo finalizar la orden.");
+        }
+    }
+
+    /** Volver al menú del mesero SIN cerrar la orden */
+    @FXML
+    private void volver() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/mesero.fxml"));
+            Parent root = loader.load();
+
+            MeseroController meseroController = loader.getController();
+            meseroController.setIdMesero(idMesero, nombreMesero);
+
+            Stage stage = (Stage) ((Node)btnFinalizar).getScene().getWindow();
+            stage.getScene().setRoot(root);            stage.setMaximized(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo volver al menú del mesero.");
         }
     }
 
@@ -99,7 +127,7 @@ public class FinalizarOrdenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.getScene().setRoot(root);
+            stage.getScene().setRoot(root);            stage.setMaximized(true);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cerrar la sesión.");
@@ -113,10 +141,11 @@ public class FinalizarOrdenController {
         alert.showAndWait();
     }
 
-    // Modelo para la tabla
+    // Modelo tabla
     public static class ResumenCuenta {
         private final SimpleStringProperty platillo;
         private final SimpleStringProperty cantidad;
+
         public ResumenCuenta(String platillo, int cantidad) {
             this.platillo = new SimpleStringProperty(platillo);
             this.cantidad = new SimpleStringProperty("x" + cantidad);

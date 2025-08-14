@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 import java.sql.*;
 import java.util.*;
 
@@ -23,34 +24,51 @@ public class OrdenController {
     @FXML private TableColumn<FilaOrden, String> colCantidad;
     @FXML private TableColumn<FilaOrden, Void> colAcciones;
 
-    // Listas para combos y mapeos
     private ObservableList<String> categorias = FXCollections.observableArrayList();
     private Map<String, ObservableList<String>> platillosPorCategoria = new HashMap<>();
 
-    // Datos de la sesión
     private int idMesero;
     private String nombreMesero;
     private String nombreMesa;
     private String horario;
-    private int idAsignacion; // NUEVO
+    private int idAsignacion;
 
-    // Lista de filas de la orden
+    // Si no es null: estamos EDITANDO esta orden
+    private Integer idOrdenEnEdicion = null;
+
     private final ObservableList<FilaOrden> filas = FXCollections.observableArrayList();
 
-    // Método llamado desde el MeseroController para inicializar la pantalla
+    // ===== Setters =====
+
+    // Tomar orden (sin prefill)
     public void setDatosMesa(int idMesero, String nombreMesero, String nombreMesa, String horario, int idAsignacion) {
         this.idMesero = idMesero;
         this.nombreMesero = nombreMesero;
         this.nombreMesa = nombreMesa;
         this.horario = horario;
         this.idAsignacion = idAsignacion;
+        this.idOrdenEnEdicion = null;
+
         labelMesaYHorario.setText("Mesa Asignada: " + nombreMesa + " - " + horario);
         labelMesero.setText(nombreMesero);
+
+        if (filas.isEmpty()) {
+            agregarFilaOrden();
+        }
+    }
+
+    // Editar orden (con prefill)
+    public void setDatosMesaParaEditar(int idMesero, String nombreMesero, String nombreMesa,
+                                       String horario, int idAsignacion, int idOrdenEditar) {
+        setDatosMesa(idMesero, nombreMesero, nombreMesa, horario, idAsignacion);
+        this.idOrdenEnEdicion = idOrdenEditar;
+        prellenarDesdeOrden(idOrdenEditar);
     }
 
     @FXML
     public void initialize() {
         cargarCategoriasYPlatillos();
+
         colCategoria.setCellValueFactory(cell -> cell.getValue().categoriaProperty());
         colPlatillo.setCellValueFactory(cell -> cell.getValue().platilloProperty());
         colCantidad.setCellValueFactory(cell -> cell.getValue().cantidadProperty());
@@ -70,22 +88,25 @@ public class OrdenController {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty) setGraphic(null);
-                    else {
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
                         combo.setValue(item);
                         setGraphic(combo);
                     }
                 }
             };
         });
+
         colPlatillo.setCellFactory(param -> {
             final ComboBox<String> combo = new ComboBox<>();
             return new TableCell<>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty) setGraphic(null);
-                    else {
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
                         FilaOrden fila = getTableView().getItems().get(getIndex());
                         String categoriaSeleccionada = fila.getCategoria();
                         if (categoriaSeleccionada != null && platillosPorCategoria.containsKey(categoriaSeleccionada)) {
@@ -100,14 +121,16 @@ public class OrdenController {
                 }
             };
         });
+
         colCantidad.setCellFactory(param -> {
             final TextField textField = new TextField();
             return new TableCell<>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty) setGraphic(null);
-                    else {
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
                         FilaOrden fila = getTableView().getItems().get(getIndex());
                         textField.setText(item != null ? item : "");
                         textField.textProperty().addListener((obs, oldVal, newVal) -> fila.setCantidad(newVal));
@@ -116,6 +139,7 @@ public class OrdenController {
                 }
             };
         });
+
         colAcciones.setCellFactory(param -> new TableCell<>() {
             private final Button btnEliminar = new Button("🗑");
             {
@@ -130,8 +154,8 @@ public class OrdenController {
                 setGraphic(empty ? null : btnEliminar);
             }
         });
+
         tablaOrden.setItems(filas);
-        agregarFilaOrden();
     }
 
     private void cargarCategoriasYPlatillos() {
@@ -158,17 +182,41 @@ public class OrdenController {
         }
     }
 
+    private void prellenarDesdeOrden(int idOrden) {
+        filas.clear();
+        String sql = "SELECT c.NOMBRE AS categoria, p.NOMBRE AS platillo, d.CANTIDAD " +
+                "FROM DETALLE_ORDEN d " +
+                "JOIN PLATILLOS p ON p.ID = d.PLATILLO_ID " +
+                "JOIN CATEGORIAS c ON c.ID = p.CATEGORIA_ID " +
+                "WHERE d.ORDEN_ID = ? ORDER BY d.ID";
+        try (Connection con = Conexion.conectar();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, idOrden);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                FilaOrden f = new FilaOrden();
+                f.setCategoria(rs.getString("categoria"));
+                f.setPlatillo(rs.getString("platillo"));
+                f.setCantidad(String.valueOf(rs.getInt("CANTIDAD")));
+                filas.add(f);
+            }
+            if (filas.isEmpty()) {
+                agregarFilaOrden();
+            }
+            tablaOrden.refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo prellenar la orden.");
+        }
+    }
+
     @FXML
     private void agregarFilaOrden() {
         filas.add(new FilaOrden());
     }
 
-    /**
-     * Al presionar "Realizar la orden", guarda en la base de datos.
-     */
     @FXML
     private void realizarOrden() {
-        // Validaciones previas
         for (FilaOrden fila : filas) {
             if (fila.getCategoria() == null || fila.getPlatillo() == null || fila.getCantidad() == null ||
                     fila.getCategoria().isEmpty() || fila.getPlatillo().isEmpty() || fila.getCantidad().isEmpty()) {
@@ -183,60 +231,75 @@ public class OrdenController {
                 return;
             }
         }
+
         try (Connection con = Conexion.conectar()) {
             con.setAutoCommit(false);
 
             int mesaId = obtenerIdMesaPorNombre(nombreMesa);
+            int idOrden;
 
-            // Busca si ya hay una orden ABIERTA para esta asignación
-            int idOrden = -1;
-            String sqlCheck = "SELECT ID FROM ORDENES WHERE ASIGNACION_ID = ? AND ESTADO = 'ABIERTA'";
-            try (PreparedStatement stmt = con.prepareStatement(sqlCheck)) {
-                stmt.setInt(1, idAsignacion);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) idOrden = rs.getInt("ID");
-            }
-            // Si no existe, crea una nueva
-            if (idOrden == -1) {
-                String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO, ASIGNACION_ID) VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA', ?)";
-                try (PreparedStatement stmt = con.prepareStatement(sqlOrden, new String[]{"ID"})) {
-                    stmt.setInt(1, mesaId);
-                    stmt.setInt(2, idMesero);
-                    stmt.setInt(3, idAsignacion);
-                    stmt.executeUpdate();
-                    ResultSet rs = stmt.getGeneratedKeys();
-                    if (rs.next()) idOrden = rs.getInt(1);
+            if (idOrdenEnEdicion != null) {
+                // === EDITANDO una orden existente ===
+                idOrden = idOrdenEnEdicion;
+
+                try (PreparedStatement del = con.prepareStatement(
+                        "DELETE FROM DETALLE_ORDEN WHERE ORDEN_ID = ?")) {
+                    del.setInt(1, idOrden);
+                    del.executeUpdate();
                 }
+
             } else {
-                // Si existe, elimina los detalles anteriores para actualizar la orden
-                String sqlDel = "DELETE FROM DETALLE_ORDEN WHERE ORDEN_ID = ?";
-                try (PreparedStatement stmt = con.prepareStatement(sqlDel)) {
-                    stmt.setInt(1, idOrden);
-                    stmt.executeUpdate();
+                // === CREANDO / ACTUALIZANDO una ABIERTA de esta asignación ===
+                idOrden = -1;
+                String sqlCheck = "SELECT ID FROM ORDENES WHERE ASIGNACION_ID = ? AND ESTADO = 'ABIERTA' " +
+                        "ORDER BY FECHA DESC FETCH FIRST 1 ROWS ONLY";
+                try (PreparedStatement stmt = con.prepareStatement(sqlCheck)) {
+                    stmt.setInt(1, idAsignacion);
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next()) idOrden = rs.getInt("ID");
+                }
+
+                if (idOrden == -1) {
+                    String sqlOrden = "INSERT INTO ORDENES (MESA_ID, MESERO_ID, FECHA, ESTADO, ASIGNACION_ID) " +
+                            "VALUES (?, ?, SYSTIMESTAMP, 'ABIERTA', ?)";
+                    try (PreparedStatement ins = con.prepareStatement(sqlOrden, new String[]{"ID"})) {
+                        ins.setInt(1, mesaId);
+                        ins.setInt(2, idMesero);
+                        ins.setInt(3, idAsignacion);
+                        ins.executeUpdate();
+                        ResultSet rs = ins.getGeneratedKeys();
+                        if (rs.next()) idOrden = rs.getInt(1);
+                    }
+                } else {
+                    try (PreparedStatement del = con.prepareStatement(
+                            "DELETE FROM DETALLE_ORDEN WHERE ORDEN_ID = ?")) {
+                        del.setInt(1, idOrden);
+                        del.executeUpdate();
+                    }
                 }
             }
 
-            // --- Inserta los detalles nuevos ---
             String sqlDetalle = "INSERT INTO DETALLE_ORDEN (ORDEN_ID, PLATILLO_ID, CANTIDAD) VALUES (?, ?, ?)";
-            try (PreparedStatement stmtDetalle = con.prepareStatement(sqlDetalle)) {
+            try (PreparedStatement det = con.prepareStatement(sqlDetalle)) {
                 for (FilaOrden fila : filas) {
                     int platilloId = obtenerIdPlatilloPorNombre(fila.getPlatillo());
                     int cantidad = Integer.parseInt(fila.getCantidad());
-                    stmtDetalle.setInt(1, idOrden);
-                    stmtDetalle.setInt(2, platilloId);
-                    stmtDetalle.setInt(3, cantidad);
-                    stmtDetalle.addBatch();
+                    det.setInt(1, idOrden);
+                    det.setInt(2, platilloId);
+                    det.setInt(3, cantidad);
+                    det.addBatch();
                 }
-                stmtDetalle.executeBatch();
+                det.executeBatch();
             }
 
             con.commit();
 
-            // --- Navega al detalle ---
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/detalle_orden.fxml"));
             Parent root = loader.load();
             DetalleOrdenController controller = loader.getController();
-            String ruta = "Mesas Asignadas/Orden " + nombreMesa;
+            String ruta = (idOrdenEnEdicion != null)
+                    ? "Mesas Asignadas/Editar Orden " + nombreMesa
+                    : "Mesas Asignadas/Orden " + nombreMesa;
             controller.setDatosOrden(idOrden, idMesero, nombreMesero, ruta);
 
             Stage stage = (Stage) tablaOrden.getScene().getWindow();

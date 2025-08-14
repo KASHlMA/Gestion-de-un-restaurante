@@ -4,11 +4,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.scene.Node;
 import java.sql.*;
 
@@ -16,6 +16,8 @@ public class DetalleOrdenController {
 
     @FXML private Label labelNombreMesero;
     @FXML private Label labelRuta;
+    @FXML private Label lblEstado;              // NUEVO: estado visible
+    @FXML private Button btnVolver;             // NUEVO: volver a Mesero
     @FXML private TableView<DetalleOrden> tablaDetalle;
     @FXML private TableColumn<DetalleOrden, String> colPlatillo;
     @FXML private TableColumn<DetalleOrden, String> colCantidad;
@@ -26,12 +28,8 @@ public class DetalleOrdenController {
     private int idMesero;
     private String nombreMesero;
 
-    private ObservableList<DetalleOrden> detalles = FXCollections.observableArrayList();
+    private final ObservableList<DetalleOrden> detalles = FXCollections.observableArrayList();
 
-    /**
-     * Llama esto justo después de cargar el FXML, así:
-     *  controller.setDatosOrden(idOrden, idMesero, nombreMesero, ruta);
-     */
     public void setDatosOrden(int idOrden, int idMesero, String nombreMesero, String ruta) {
         this.idOrden = idOrden;
         this.idMesero = idMesero;
@@ -39,12 +37,9 @@ public class DetalleOrdenController {
         labelNombreMesero.setText(nombreMesero);
         labelRuta.setText(ruta);
         cargarDetalleOrden();
-        actualizarEstadoBotones();
+        actualizarEstadoUI();
     }
 
-    /**
-     * Inicializa las columnas y la tabla
-     */
     @FXML
     public void initialize() {
         colPlatillo.setCellValueFactory(cell -> cell.getValue().platilloProperty());
@@ -52,9 +47,6 @@ public class DetalleOrdenController {
         tablaDetalle.setItems(detalles);
     }
 
-    /**
-     * Consulta los detalles de la orden en la BD y los muestra en la tabla.
-     */
     private void cargarDetalleOrden() {
         detalles.clear();
         String sql = "SELECT p.NOMBRE AS platillo, d.CANTIDAD " +
@@ -73,24 +65,22 @@ public class DetalleOrdenController {
         }
     }
 
-    /**
-     * Actualiza los botones dependiendo del estado de la orden
-     */
-    private void actualizarEstadoBotones() {
+    /** Muestra estado y habilita/deshabilita botones */
+    private void actualizarEstadoUI() {
         String estado = obtenerEstadoOrden();
-        if ("ENVIADA".equalsIgnoreCase(estado)) {
-            btnModificar.setVisible(false);
-            btnEnviarCocina.setVisible(false);
-        } else {
-            btnModificar.setVisible(true);
-            btnEnviarCocina.setVisible(true);
-        }
+        if (lblEstado != null) lblEstado.setText(estado == null ? "-" : estado);
+
+        // Política:
+        // ABIERTA  -> Modificar ON, Enviar ON
+        // ENVIADA  -> Modificar ON (edición aprobada se invoca desde Mesero), Enviar OFF
+        // CERRADA  -> ambos OFF
+        boolean modEnabled = "ABIERTA".equalsIgnoreCase(estado) || "ENVIADA".equalsIgnoreCase(estado);
+        boolean enviarEnabled = "ABIERTA".equalsIgnoreCase(estado);
+
+        btnModificar.setDisable(!modEnabled);
+        btnEnviarCocina.setDisable(!enviarEnabled);
     }
 
-
-    /**
-     * Consulta el estado de la orden (ABIERTA, ENVIADA, CERRADA...)
-     */
     private String obtenerEstadoOrden() {
         String estado = "";
         String sql = "SELECT ESTADO FROM ORDENES WHERE ID = ?";
@@ -105,9 +95,6 @@ public class DetalleOrdenController {
         return estado;
     }
 
-    /**
-     * Botón para modificar la orden (redirige a la pantalla de edición)
-     */
     @FXML
     private void modificarOrden() {
         try {
@@ -115,18 +102,70 @@ public class DetalleOrdenController {
             Parent root = loader.load();
             OrdenController ordenController = loader.getController();
             int asignacionId = obtenerAsignacionIdPorOrden(idOrden);
-            ordenController.setDatosMesa(
+            ordenController.setDatosMesaParaEditar(
                     idMesero,
                     nombreMesero,
                     obtenerNombreMesaPorOrden(idOrden),
                     obtenerHorarioPorOrden(idOrden),
-                    asignacionId
+                    asignacionId,
+                    idOrden
             );
             Stage stage = (Stage) tablaDetalle.getScene().getWindow();
             stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo abrir la edición de la orden.");
+        }
+    }
+
+    @FXML
+    private void enviarCocina() {
+        String sql = "UPDATE ORDENES SET ESTADO='ENVIADA' WHERE ID = ?";
+        try (Connection con = Conexion.conectar();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, idOrden);
+            stmt.executeUpdate();
+            mostrarAlerta("¡Listo!", "La orden se ha enviado a cocina.");
+
+            // Regresa a la pantalla del mesero
+            volverALaPantallaDeMesero(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo enviar a cocina.");
+        }
+    }
+
+    @FXML
+    private void volver(javafx.event.ActionEvent event) {
+        volverALaPantallaDeMesero(event);
+    }
+
+    private void volverALaPantallaDeMesero(javafx.event.ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/mesero.fxml"));
+            Parent root = loader.load();
+            MeseroController meseroController = loader.getController();
+            meseroController.setIdMesero(idMesero, nombreMesero);
+            Stage stage = (Stage) (event == null
+                    ? tablaDetalle.getScene().getWindow()
+                    : ((Node) event.getSource()).getScene().getWindow());
+            stage.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo regresar.");
+        }
+    }
+
+    @FXML
+    private void cerrarSesion(javafx.event.ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cerrar la sesión.");
         }
     }
 
@@ -141,55 +180,6 @@ public class DetalleOrdenController {
         }
     }
 
-
-    /**
-     * Botón para enviar la orden a cocina (cambia el estado y deshabilita edición)
-     */
-    @FXML
-    private void enviarCocina() {
-        String sql = "UPDATE ORDENES SET ESTADO='ENVIADA' WHERE ID = ?";
-        try (Connection con = Conexion.conectar();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, idOrden);
-            stmt.executeUpdate();
-            mostrarAlerta("¡Listo!", "La orden se ha enviado a cocina.");
-
-            // --- REGRESAR A MENÚ DE MESAS ASIGNADAS DEL MESERO ---
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/mesero.fxml"));
-            Parent root = loader.load();
-            MeseroController meseroController = loader.getController();
-            meseroController.setIdMesero(idMesero, nombreMesero);
-            Stage stage = (Stage) tablaDetalle.getScene().getWindow();
-            stage.getScene().setRoot(root);
-            // No hace falta llamar a actualizarEstadoBotones() aquí, ya que sales de esta pantalla.
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo enviar a cocina.");
-        }
-    }
-
-
-    /**
-     * Botón para solicitar cambios (envía notificación al líder de meseros)
-     */
-
-    /**
-     * Cierra la sesión y vuelve al login.
-     */
-    @FXML
-    private void cerrarSesion(javafx.event.ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.getScene().setRoot(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo cerrar la sesión.");
-        }
-    }
-
-    // Métodos auxiliares para obtener datos de la orden
     private String obtenerNombreMesaPorOrden(int idOrden) {
         String nombre = "";
         String sql = "SELECT m.NOMBRE FROM ORDENES o JOIN MESAS m ON o.MESA_ID = m.ID WHERE o.ID = ?";
@@ -201,7 +191,9 @@ public class DetalleOrdenController {
         } catch (Exception e) { e.printStackTrace(); }
         return nombre;
     }
+
     private String obtenerHorarioPorOrden(int idOrden) {
+        // si prefieres el horario asignado, podrías cambiar esta consulta
         String horario = "";
         String sql = "SELECT TO_CHAR(o.FECHA, 'HH12:MI AM') AS HORA FROM ORDENES o WHERE o.ID = ?";
         try (Connection con = Conexion.conectar();
@@ -213,7 +205,7 @@ public class DetalleOrdenController {
         return horario;
     }
 
-    // Modelo para la tabla
+    // Modelo de la tabla
     public static class DetalleOrden {
         private final SimpleStringProperty platillo;
         private final SimpleStringProperty cantidad;
@@ -227,12 +219,10 @@ public class DetalleOrdenController {
         public SimpleStringProperty cantidadProperty() { return cantidad; }
     }
 
-    // Utilidad: muestra alerta informativa
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, mensaje);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.showAndWait();
     }
-
 }

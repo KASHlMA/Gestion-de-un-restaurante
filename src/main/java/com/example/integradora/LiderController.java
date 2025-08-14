@@ -118,9 +118,10 @@ public class LiderController {
                         rs.getString("mesa"),
                         rs.getString("mesero"),
                         rs.getString("horario"),
-                        rs.getString("estado") == null ? "Sin Orden" : rs.getString("estado"),
-                        rs.getString("fecha")
+                        rs.getString("fecha"),                                  // ← FECHA primero
+                        rs.getString("estado") == null ? "Sin Orden" : rs.getString("estado") // ← luego ESTADO
                 ));
+
             }
             tablaMesas.setItems(datos);
         } catch (Exception e) {
@@ -154,9 +155,10 @@ public class LiderController {
                         rs.getString("mesa"),
                         rs.getString("mesero"),
                         rs.getString("horario"),
-                        rs.getString("estado") == null ? "Sin Orden" : rs.getString("estado"),
-                        rs.getString("fecha")
+                        rs.getString("fecha"),                                  // ← FECHA primero
+                        rs.getString("estado") == null ? "Sin Orden" : rs.getString("estado") // ← luego ESTADO
                 ));
+
             }
             tablaHoy.setItems(datosHoy);
         } catch (Exception e) {
