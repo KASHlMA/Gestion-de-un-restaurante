@@ -39,8 +39,8 @@ public class UsuariosAdminController {
 
         // Botón editar/eliminar
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑");
+            private final Button btnEditar = new Button("Editar");
+            private final Button btnEliminar = new Button("Eliminar");
             private final HBox box = new HBox(10, btnEditar, btnEliminar);
             {
                 btnEditar.setOnAction(e -> abrirEditarUsuario(getTableView().getItems().get(getIndex())));

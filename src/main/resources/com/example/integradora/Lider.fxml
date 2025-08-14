@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.integradora.LiderController"
-            prefWidth="900" prefHeight="600"
-            stylesheets="@../../../styles/lider.css">
+<BorderPane prefHeight="600" prefWidth="900" stylesheets="@../../../styles/lider.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.LiderController">
 
     <!-- Menú lateral izquierdo -->
     <left>
-        <VBox spacing="25" alignment="TOP_CENTER" styleClass="menu-lateral" prefHeight="600">
+        <VBox alignment="TOP_CENTER" prefHeight="600" spacing="25" styleClass="menu-lateral">
             <VBox alignment="CENTER" spacing="10" style="-fx-padding: 30 0 10 0;">
                 <ImageView fitHeight="60" fitWidth="60">
                     <image>
                         <Image url="@../../../images/iconUser.png" />
                     </image>
                 </ImageView>
-                <Label text="Líder De Mesero" styleClass="usuario-label"/>
-                <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="cerrar-sesion"/>
+                <Label styleClass="usuario-label" text="Líder De Mesero" />
+                <Button onAction="#cerrarSesion" styleClass="cerrar-sesion" text="Cerrar Sesión" />
             </VBox>
-            <Separator/>
+            <Separator />
             <VBox spacing="10" style="-fx-padding: 25 0 0 0;">
-                <Button text="Visualizar Mesas y Meseros" styleClass="menu-btn" onAction="#mostrarMesas"/>
-                <Button text="Asignación de Plan" styleClass="menu-btn" onAction="#mostrarAsignacion"/>
-                <Button text="Solicitudes de Cambios" styleClass="menu-btn" onAction="#mostrarSolicitudes"/>
+                <Button onAction="#mostrarMesas" styleClass="menu-btn" text="Visualizar Mesas y Meseros" />
+                <Button onAction="#mostrarAsignacion" styleClass="menu-btn" text="Asignación de Plan" />
+                <Button onAction="#mostrarSolicitudes" styleClass="menu-btn" text="Solicitudes de Cambios" />
             </VBox>
         </VBox>
     </left>
@@ -33,17 +30,39 @@
     <!-- Área central dinámica, aquí se carga cada módulo -->
     <center>
         <VBox fx:id="contenidoCentral" alignment="TOP_CENTER" spacing="30">
+
+
             <!-- Contenido inicial: la tabla de mesas -->
-            <Label fx:id="tituloLabel" text="¡Bienvenido!" styleClass="titulo-bienvenida"/>
-            <TableView fx:id="tablaMesas" prefWidth="600">
+            <Label fx:id="tituloLabel" styleClass="titulo-bienvenida" text="¡Bienvenido!" />
+            <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Asignadas Hoy" />
+
+            <!-- Segunda tabla: SOLO las asignaciones de HOY -->
+            <TableView fx:id="tablaHoy" prefHeight="240">
                 <columns>
-                    <TableColumn fx:id="colMesas" text="Mesas" prefWidth="140"/>
-                    <TableColumn fx:id="colMesero" text="Mesero" prefWidth="140"/>
-                    <TableColumn fx:id="colHorario" text="Horario" prefWidth="140"/>
-                    <TableColumn fx:id="colEstado" text="Estado Cuenta" prefWidth="100"/>
-                    <TableColumn fx:id="colDetalle" text="Detalle" prefWidth="80"/>
+                    <TableColumn fx:id="colMesasHoy" prefWidth="160" text="Mesas" />
+                    <TableColumn fx:id="colMeseroHoy" prefWidth="180" text="Mesero" />
+                    <TableColumn fx:id="colHorarioHoy" prefWidth="220" text="Horario" />
+                    <TableColumn fx:id="colFechaHoy" prefWidth="120" text="Fecha" />
+                    <TableColumn fx:id="colEstadoHoy" prefWidth="150" text="Estado Cuenta" />
+                    <TableColumn fx:id="colDetalleHoy" prefWidth="120" text="Detalle" />
                 </columns>
             </TableView>
+
+            <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Lista de asignaciones completa" />
+            <TableView fx:id="tablaMesas" prefHeight="513.0" prefWidth="670.0">
+                <columns>
+                    <TableColumn fx:id="colMesas" prefWidth="140" text="Mesas" />
+                    <TableColumn fx:id="colMesero" prefWidth="140" text="Mesero" />
+                    <TableColumn fx:id="colHorario" prefWidth="170" text="Horario" />
+                    <TableColumn fx:id="colEstado" prefWidth="141.99996948242188" text="Estado Cuenta" />
+                    <TableColumn fx:id="colFecha" prefWidth="120" text="Fecha" />
+                    <TableColumn fx:id="colDetalle" text="Detalle" />
+
+                </columns>
+            </TableView>
+
+
+
 
         </VBox>
     </center>

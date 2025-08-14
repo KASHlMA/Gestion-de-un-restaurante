@@ -4,8 +4,10 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.integradora.DetalleOrdenLiderController"
-            prefWidth="500" prefHeight="400">
-    <top>
+            prefWidth="500" prefHeight="400"
+            stylesheets="@../../../styles/mesero.css">
+
+<top>
         <Label fx:id="labelInfo" style="-fx-font-size:18px; -fx-padding:15px;" text="Detalle de la Orden"/>
     </top>
     <center>

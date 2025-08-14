@@ -16,8 +16,8 @@
             <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="160"/>
             <TableColumn fx:id="colPlatillo" text="Platillo" prefWidth="160"/>
             <TableColumn fx:id="colPrecio" text="Precio" prefWidth="120"/>
-            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
-            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="100"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
+            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="130"/>
         </columns>
     </TableView>
     <Separator/>
@@ -25,8 +25,8 @@
     <TableView fx:id="tablaCategorias" prefWidth="400">
         <columns>
             <TableColumn fx:id="colNombreCategoria" text="Nombre" prefWidth="200"/>
-            <TableColumn fx:id="colEstadoCategoria" text="Estado" prefWidth="100"/>
-            <TableColumn fx:id="colAccionesCategoria" text="Acciones" prefWidth="100"/>
+            <TableColumn fx:id="colEstadoCategoria" text="Estado" prefWidth="120"/>
+            <TableColumn fx:id="colAccionesCategoria" text="Acciones" prefWidth="130"/>
         </columns>
     </TableView>
 </VBox>

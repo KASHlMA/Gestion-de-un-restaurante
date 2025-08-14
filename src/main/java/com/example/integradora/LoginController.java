@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -62,15 +63,31 @@ public class LoginController {
                     case "LIDER DE MESEROS":
                         abrirPantalla("/com/example/integradora/lider.fxml");
                         break;
-                    case "MESERO":
-                        // --- AQUÍ SE HACE LA REDIRECCIÓN ---
+                    case "MESERO": {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/mesero.fxml"));
                         Parent root = loader.load();
+
                         MeseroController meseroController = loader.getController();
                         meseroController.setIdMesero(idUsuario, nombreUsuario);
+
                         Stage stage = (Stage) usernameField.getScene().getWindow();
-                        stage.setScene(new Scene(root));
+                        Scene scene = stage.getScene();
+                        scene.setRoot(root);
+                        stage.setMaximized(true);
+
+                        if (root instanceof Region r) {
+                            r.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+                            r.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+                            r.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                            r.prefWidthProperty().bind(scene.widthProperty());
+                            r.prefHeightProperty().bind(scene.heightProperty());
+                        }
+
+                        javafx.application.Platform.runLater(stage::sizeToScene);
                         break;
+                    }
+
+
                     default:
                         mostrarAlerta("Rol desconocido", "El rol no es válido.", Alert.AlertType.ERROR);
                 }
@@ -94,6 +111,7 @@ public class LoginController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+
     }
 
     /**
@@ -103,16 +121,40 @@ public class LoginController {
      */
     private void abrirPantalla(String rutaFXML) {
         try {
-            // Carga el nuevo FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
             Parent root = loader.load();
 
-            // Obtiene la ventana (stage) actual y cambia la escena
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = stage.getScene();
+
+            // Cambia solo el root (no crees Scene nueva)
+            scene.setRoot(root);
+
+            // Reafirma que el stage siga max.
+            stage.setMaximized(true);
+
+            // ⬇️ MUY IMPORTANTE: que el root se deje estirar por la Scene
+            if (root instanceof javafx.scene.layout.Region r) {
+                r.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+                r.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+                r.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+                // que el root ocupe todo el tamaño de la escena
+                r.prefWidthProperty().bind(scene.widthProperty());
+                r.prefHeightProperty().bind(scene.heightProperty());
+            }
+
+            // último empujón de layout (al siguiente pulso de UI)
+            javafx.application.Platform.runLater(() -> {
+                stage.sizeToScene();
+                stage.centerOnScreen();
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cargar la pantalla.", Alert.AlertType.ERROR);
         }
     }
+
+
 }

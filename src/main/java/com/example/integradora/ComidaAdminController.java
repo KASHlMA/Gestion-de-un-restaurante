@@ -73,7 +73,7 @@ public class ComidaAdminController {
         cargarPlatillos();
 
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
+            private final Button btnEditar = new Button("Editar");
             private final Button btnEliminar = new Button("🗑");
             private final HBox box = new HBox(10, btnEditar, btnEliminar);
             {
@@ -94,7 +94,7 @@ public class ComidaAdminController {
         cargarCategorias();
 
         colAccionesCategoria.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
+            private final Button btnEditar = new Button("Editar");
             private final Button btnEliminar = new Button("🗑");
             private final HBox box = new HBox(10, btnEditar, btnEliminar);
             {
