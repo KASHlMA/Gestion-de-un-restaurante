@@ -3,27 +3,28 @@ package com.example.integradora;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Optional;
 
 public class MesasAdminController {
 
     @FXML private TableView<Mesa> tablaMesas;
     @FXML private TableColumn<Mesa, String> colNombreMesa;
     @FXML private TableColumn<Mesa, String> colEstado;
-    @FXML private TableColumn<Mesa, Void> colAcciones;
+    @FXML private TableColumn<Mesa, Void>   colAcciones;
     @FXML private Button btnAnadirMesa;
 
-    private ObservableList<Mesa> datos = FXCollections.observableArrayList();
+    private final ObservableList<Mesa> datos = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -31,20 +32,30 @@ public class MesasAdminController {
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
         cargarMesas();
 
-        // Botón editar/eliminar en cada fila
+        // Botones Editar / Eliminar por fila
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑️");
-            private final HBox box = new HBox(15, btnEditar, btnEliminar); // espacio mayor
+            private final Button btnEditar   = new Button("Editar");
+            private final Button btnEliminar = new Button("Eliminar");
+            private final HBox box = new HBox(15, btnEditar, btnEliminar);
 
             {
                 box.getStyleClass().add("hbox-acciones");
                 btnEditar.getStyleClass().add("boton-ver");
                 btnEliminar.getStyleClass().add("boton-eliminar");
-                btnEditar.setOnAction(e -> abrirEditarMesa(getTableView().getItems().get(getIndex())));
-                btnEliminar.setOnAction(e -> eliminarMesa(getTableView().getItems().get(getIndex()).getId()));
-                btnEditar.setText("Editar");
-                btnEliminar.setText("Eliminar");
+
+                btnEditar.setOnAction(e -> {
+                    Mesa m = getTableView().getItems().get(getIndex());
+                    abrirEditarMesa(m);
+                });
+
+                btnEliminar.setOnAction(e -> {
+                    Mesa m = getTableView().getItems().get(getIndex());
+                    // Confirmación antes de eliminar
+                    if (confirmar("Eliminar mesa",
+                            "¿Seguro que deseas eliminar la mesa \"" + m.getNombre() + "\"?")) {
+                        eliminarMesa(m.getId());
+                    }
+                });
             }
 
             @Override
@@ -53,7 +64,6 @@ public class MesasAdminController {
                 setGraphic(empty ? null : box);
             }
         });
-
     }
 
     private void cargarMesas() {
@@ -63,12 +73,14 @@ public class MesasAdminController {
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                datos.add(new Mesa(rs.getInt("ID"), rs.getString("NOMBRE"), rs.getString("ESTADO")));
+                datos.add(new Mesa(rs.getInt("ID"),
+                        rs.getString("NOMBRE"),
+                        rs.getString("ESTADO")));
             }
             tablaMesas.setItems(datos);
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudieron cargar las mesas.");
+            mostrarInfo("Error", "No se pudieron cargar las mesas.");
         }
     }
 
@@ -94,14 +106,15 @@ public class MesasAdminController {
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo abrir el formulario.");
+            mostrarInfo("Error", "No se pudo abrir el formulario.");
         }
     }
 
     private void eliminarMesa(int mesaId) {
-        // Verifica si hay relaciones
+        // Verifica si hay relaciones antes de eliminar
         if (tieneRelacion(mesaId)) {
-            mostrarAlerta("No puedes eliminar la mesa", "Esta mesa tiene registros relacionados (órdenes o asignaciones).");
+            mostrarInfo("No se puede eliminar",
+                    "Esta mesa tiene registros relacionados (órdenes o asignaciones).");
             return;
         }
 
@@ -111,21 +124,41 @@ public class MesasAdminController {
             stmt.setInt(1, mesaId);
             int rows = stmt.executeUpdate();
             if (rows > 0) {
-                mostrarAlerta("Mesa eliminada", "La mesa fue eliminada exitosamente.");
+                mostrarInfo("Mesa eliminada", "La mesa fue eliminada exitosamente.");
                 cargarMesas(); // refresca la tabla
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo eliminar la mesa.");
+            mostrarInfo("Error", "No se pudo eliminar la mesa.");
         }
     }
 
+    // ---------- Utilidades de diálogo ----------
+    private boolean confirmar(String titulo, String mensaje) {
+        ButtonType si = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, mensaje, si, no);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        Stage owner = ownerWindow();
+        if (owner != null) alert.initOwner(owner);
+        Optional<ButtonType> r = alert.showAndWait();
+        return r.isPresent() && r.get() == si;
+    }
 
-    private void mostrarAlerta(String titulo, String mensaje) {
+    private void mostrarInfo(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, mensaje);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
+        Stage owner = ownerWindow();
+        if (owner != null) alert.initOwner(owner);
         alert.showAndWait();
+    }
+
+    private Stage ownerWindow() {
+        return (tablaMesas != null && tablaMesas.getScene() != null)
+                ? (Stage) tablaMesas.getScene().getWindow()
+                : null;
     }
 
     // Modelo Mesa
@@ -146,21 +179,19 @@ public class MesasAdminController {
     private boolean tieneRelacion(int mesaId) {
         String[] tablas = {"ORDENES", "ASIGNACIONES_MESAS"};
         for (String tabla : tablas) {
-            String sql = "SELECT 1 FROM " + tabla + " WHERE MESA_ID = ?";
+            String sql = "SELECT 1 FROM " + tabla + " WHERE MESA_ID = ? FETCH FIRST 1 ROWS ONLY";
             try (Connection con = Conexion.conectar();
                  PreparedStatement stmt = con.prepareStatement(sql)) {
                 stmt.setInt(1, mesaId);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    return true; // Tiene relación
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) return true; // Tiene relación
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                // Por seguridad, si hay error asumimos que tiene relación y no borramos
+                // Por seguridad, si hay error asumimos relación y no borramos
                 return true;
             }
         }
         return false; // No hay relación
     }
-
 }

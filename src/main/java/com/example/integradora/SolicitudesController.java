@@ -6,8 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class SolicitudesController {
 
@@ -16,11 +18,10 @@ public class SolicitudesController {
     @FXML private TableColumn<SolicitudCambio, String> colMesero;
     @FXML private TableColumn<SolicitudCambio, String> colDescripcion;
     @FXML private TableColumn<SolicitudCambio, String> colEstado;
-    @FXML private TableColumn<SolicitudCambio, Void> colAcciones;
     @FXML private TableColumn<SolicitudCambio, String> colHorario;
+    @FXML private TableColumn<SolicitudCambio, Void>   colAcciones;
 
-
-    private ObservableList<SolicitudCambio> solicitudes = FXCollections.observableArrayList();
+    private final ObservableList<SolicitudCambio> solicitudes = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -30,27 +31,40 @@ public class SolicitudesController {
         colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
-        // Botones de acción
+        // Botones de acción por fila con confirmación
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnAceptar = new Button("Aceptar");
-            private final Button btnDenegar = new Button("Denegar");
+            private final Button btnAceptar  = new Button("Aceptar");
+            private final Button btnDenegar  = new Button("Denegar");
             private final Button btnEliminar = new Button("Eliminar");
-            private final HBox box = new HBox(5, btnAceptar, btnDenegar, btnEliminar);
+            private final HBox box = new HBox(8, btnAceptar, btnDenegar, btnEliminar);
 
             {
-                btnAceptar.setOnAction(e -> manejarSolicitud("APROBADO"));
-                btnDenegar.setOnAction(e -> manejarSolicitud("DENEGADO"));
-                btnEliminar.setOnAction(e -> eliminarSolicitud());
+                btnAceptar.setOnAction(e -> actualizarEstadoConConfirmacion("APROBADO",
+                        "¿Seguro que deseas APROBAR esta solicitud?"));
+                btnDenegar.setOnAction(e -> actualizarEstadoConConfirmacion("DENEGADO",
+                        "¿Seguro que deseas DENEGAR esta solicitud?"));
+                btnEliminar.setOnAction(e -> eliminarConConfirmacion());
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : box);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    // Opcional: deshabilitar acciones si ya no está pendiente
+                    SolicitudCambio s = getTableView().getItems().get(getIndex());
+                    boolean pendiente = "PENDIENTE".equalsIgnoreCase(s.getEstado());
+                    btnAceptar.setDisable(!pendiente);
+                    btnDenegar.setDisable(!pendiente);
+                    setGraphic(box);
+                }
             }
 
-            private void manejarSolicitud(String nuevoEstado) {
+            private void actualizarEstadoConConfirmacion(String nuevoEstado, String mensajeConfirmacion) {
                 SolicitudCambio sol = getTableView().getItems().get(getIndex());
+                if (!confirmar("Confirmar", mensajeConfirmacion)) return;
+
                 try (Connection con = Conexion.conectar()) {
                     String sql = "UPDATE SOLICITUDES_CAMBIO SET ESTADO = ? WHERE ID = ?";
                     try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -58,29 +72,39 @@ public class SolicitudesController {
                         stmt.setInt(2, sol.getId());
                         stmt.executeUpdate();
                     }
-                    // Si fue APROBADO y quieres liberar la orden para edición, hazlo aquí (opcional)
+
+                    // Si deseas liberar la orden para edición al aprobar, descomenta este bloque:
+                    /*
                     if ("APROBADO".equals(nuevoEstado)) {
-                        // Ejemplo: poner la orden en "ABIERTA" o habilitar edición...
+                        // Ejemplo: nada que hacer si tu flujo abre directamente la pantalla de edición
+                        // tras detectar 'APROBADO' en el MeseroController.
                     }
+                    */
+
+                    mostrarInfo("Éxito", "La solicitud se actualizó a: " + nuevoEstado + ".");
                     cargarSolicitudes();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    mostrarAlerta("Error", "No se pudo actualizar la solicitud.");
+                    mostrarInfo("Error", "No se pudo actualizar la solicitud.");
                 }
             }
 
-            private void eliminarSolicitud() {
+            private void eliminarConConfirmacion() {
                 SolicitudCambio sol = getTableView().getItems().get(getIndex());
+                if (!confirmar("Eliminar solicitud",
+                        "¿Seguro que deseas ELIMINAR la solicitud de \"" + sol.getMesa() + "\"?")) return;
+
                 try (Connection con = Conexion.conectar()) {
                     String sql = "DELETE FROM SOLICITUDES_CAMBIO WHERE ID = ?";
                     try (PreparedStatement stmt = con.prepareStatement(sql)) {
                         stmt.setInt(1, sol.getId());
                         stmt.executeUpdate();
                     }
+                    mostrarInfo("Eliminada", "La solicitud fue eliminada correctamente.");
                     cargarSolicitudes();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    mostrarAlerta("Error", "No se pudo eliminar la solicitud.");
+                    mostrarInfo("Error", "No se pudo eliminar la solicitud.");
                 }
             }
         });
@@ -90,14 +114,15 @@ public class SolicitudesController {
 
     private void cargarSolicitudes() {
         solicitudes.clear();
-        String sql = "SELECT s.ID, s.ASIGNACION_ID, m.NOMBRE AS mesa, " +
-                "TO_CHAR(am.HORARIO_INICIO, 'HH12:MI AM') || ' a ' || TO_CHAR(am.HORARIO_FIN, 'HH12:MI AM') AS horario, " +
-                "u.NOMBRE AS mesero, s.DESCRIPCION, s.ESTADO " +
-                "FROM SOLICITUDES_CAMBIO s " +
-                "LEFT JOIN ASIGNACIONES_MESAS am ON s.ASIGNACION_ID = am.ID " +
-                "LEFT JOIN MESAS m ON am.MESA_ID = m.ID " +
-                "LEFT JOIN USUARIOS u ON s.MESERO_ID = u.ID " +
-                "ORDER BY s.FECHA_SOLICITUD DESC";
+        String sql =
+                "SELECT s.ID, s.ASIGNACION_ID, m.NOMBRE AS mesa, " +
+                        "       TO_CHAR(am.HORARIO_INICIO, 'HH12:MI AM') || ' a ' || TO_CHAR(am.HORARIO_FIN, 'HH12:MI AM') AS horario, " +
+                        "       u.NOMBRE AS mesero, s.DESCRIPCION, s.ESTADO " +
+                        "FROM SOLICITUDES_CAMBIO s " +
+                        "LEFT JOIN ASIGNACIONES_MESAS am ON s.ASIGNACION_ID = am.ID " +
+                        "LEFT JOIN MESAS m ON am.MESA_ID = m.ID " +
+                        "LEFT JOIN USUARIOS u ON s.MESERO_ID = u.ID " +
+                        "ORDER BY s.FECHA_SOLICITUD DESC";
         try (Connection con = Conexion.conectar();
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -115,19 +140,39 @@ public class SolicitudesController {
             tablaSolicitudes.setItems(solicitudes);
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudieron cargar las solicitudes.");
+            mostrarInfo("Error", "No se pudieron cargar las solicitudes.");
         }
     }
 
+    // ---------- Utilidades de diálogo ----------
+    private boolean confirmar(String titulo, String mensaje) {
+        ButtonType si = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, mensaje, si, no);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        Stage owner = ownerWindow();
+        if (owner != null) alert.initOwner(owner);
+        Optional<ButtonType> r = alert.showAndWait();
+        return r.isPresent() && r.get() == si;
+    }
 
-    private void mostrarAlerta(String titulo, String mensaje) {
+    private void mostrarInfo(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, mensaje);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
+        Stage owner = ownerWindow();
+        if (owner != null) alert.initOwner(owner);
         alert.showAndWait();
     }
 
-    // Modelo para la tabla
+    private Stage ownerWindow() {
+        return (tablaSolicitudes != null && tablaSolicitudes.getScene() != null)
+                ? (Stage) tablaSolicitudes.getScene().getWindow()
+                : null;
+    }
+
+    // ---------- Modelo ----------
     public static class SolicitudCambio {
         private final int id;
         private final int asignacionId;
@@ -137,7 +182,8 @@ public class SolicitudesController {
         private final String descripcion;
         private final String estado;
 
-        public SolicitudCambio(int id, int asignacionId, String mesa, String horario, String mesero, String descripcion, String estado) {
+        public SolicitudCambio(int id, int asignacionId, String mesa, String horario,
+                               String mesero, String descripcion, String estado) {
             this.id = id;
             this.asignacionId = asignacionId;
             this.mesa = mesa;
@@ -154,5 +200,4 @@ public class SolicitudesController {
         public String getDescripcion() { return descripcion; }
         public String getEstado() { return estado; }
     }
-
 }

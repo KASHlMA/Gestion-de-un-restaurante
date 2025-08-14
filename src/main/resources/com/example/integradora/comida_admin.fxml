@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.integradora.ComidaAdminController"
-      alignment="TOP_CENTER" spacing="18" style="-fx-padding: 20;" stylesheets="@../../../styles/mesero.css">
-    <Label text="Gestión de Comida" styleClass="titulo-bienvenida"/>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" spacing="18" style="-fx-padding: 20;" stylesheets="@../../../styles/mesero.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.ComidaAdminController">
+    <Label styleClass="titulo-bienvenida" text="Gestión de Comida" />
     <HBox spacing="12">
-        <Button fx:id="btnAgregarPlatillo" text="Agregar Platillo" onAction="#abrirAgregarPlatillo"/>
-        <Button fx:id="btnAgregarCategoria" text="Agregar Categoría" onAction="#abrirAgregarCategoria"/>
+        <Button fx:id="btnAgregarPlatillo" onAction="#abrirAgregarPlatillo" text="Agregar Platillo" />
+        <Button fx:id="btnAgregarCategoria" onAction="#abrirAgregarCategoria" text="Agregar Categoría" />
     </HBox>
     <TableView fx:id="tablaPlatillos" prefWidth="640">
         <columns>
-            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="160"/>
-            <TableColumn fx:id="colPlatillo" text="Platillo" prefWidth="160"/>
-            <TableColumn fx:id="colPrecio" text="Precio" prefWidth="120"/>
-            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
-            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="130"/>
+            <TableColumn fx:id="colCategoria" prefWidth="160" text="Categoría" />
+            <TableColumn fx:id="colPlatillo" prefWidth="160" text="Platillo" />
+            <TableColumn fx:id="colPrecio" prefWidth="120" text="Precio" />
+            <TableColumn fx:id="colEstado" prefWidth="120" text="Estado" />
+            <TableColumn fx:id="colAcciones" prefWidth="180" text="Acciones" />
         </columns>
     </TableView>
-    <Separator/>
-    <Label text="Categorías" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <Separator />
+    <Label styleClass="titulo-bienvenida" text="Categorías" />
     <TableView fx:id="tablaCategorias" prefWidth="400">
         <columns>
-            <TableColumn fx:id="colNombreCategoria" text="Nombre" prefWidth="200"/>
-            <TableColumn fx:id="colEstadoCategoria" text="Estado" prefWidth="120"/>
-            <TableColumn fx:id="colAccionesCategoria" text="Acciones" prefWidth="130"/>
+            <TableColumn fx:id="colNombreCategoria" prefWidth="200" text="Nombre" />
+            <TableColumn fx:id="colEstadoCategoria" prefWidth="120" text="Estado" />
+            <TableColumn fx:id="colAccionesCategoria" prefWidth="180" text="Acciones" />
         </columns>
     </TableView>
 </VBox>

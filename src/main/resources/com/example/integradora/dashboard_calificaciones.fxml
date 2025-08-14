@@ -1,52 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
+
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.integradora.DashboardCalificacionesController"
-            style="-fx-background-color: #eaf4fa;">
+<AnchorPane style="-fx-background-color: #eaf4fa;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.DashboardCalificacionesController">
 
-    <VBox alignment="TOP_CENTER" spacing="18" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" style="-fx-padding: 40;">
-        <Label text="¡Bienvenido!" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+    <VBox alignment="TOP_CENTER" spacing="18" style="-fx-padding: 40;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <Label style="-fx-font-size: 32px; -fx-font-weight: bold;" styleClass="titulo-bienvenida" stylesheets="@../../../styles/mesero.css" text="¡Bienvenido!" />
 
-        <VBox alignment="CENTER" maxWidth="950" VBox.vgrow="ALWAYS"
-              style="-fx-background-color: #fff; -fx-padding: 24; -fx-border-color: #23A4F8; -fx-border-width: 2; -fx-border-radius: 14; -fx-background-radius: 12; -fx-effect: dropshadow(one-pass-box, #22a4f825, 9, 0.08, 0, 2);">
+        <VBox alignment="CENTER" maxWidth="950" style="-fx-background-color: #fff; -fx-padding: 24; -fx-border-color: #23A4F8; -fx-border-width: 2; -fx-border-radius: 14; -fx-background-radius: 12; -fx-effect: dropshadow(one-pass-box, #22a4f825, 9, 0.08, 0, 2);" VBox.vgrow="ALWAYS">
 
-            <Label text="Dashboard de Calificaciones" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-            <Label text="Resumen de Opiniones y Desempeño de Meseros" style="-fx-font-size: 13px;"/>
-            <HBox spacing="24" alignment="CENTER">
+            <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Dashboard de Calificaciones" />
+            <Label style="-fx-font-size: 13px;" text="Resumen de Opiniones y Desempeño de Meseros" />
+            <HBox alignment="CENTER" spacing="24">
                 <VBox alignment="CENTER">
                     <Label text="☆ Calificación Promedio" />
-                    <Label fx:id="lblPromedio" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                    <Label fx:id="lblPromedio" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
                 </VBox>
                 <VBox alignment="CENTER">
-                    <Label text="🗨 Comentarios Recibidos"/>
-                    <Label fx:id="lblComentarios" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                    <Label text="🗨 Comentarios Recibidos" />
+                    <Label fx:id="lblComentarios" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
                 </VBox>
                 <VBox alignment="CENTER">
-                    <Label text="👑 Mejor Mesero"/>
-                    <Label fx:id="lblMejorMesero" style="-fx-font-size: 16px;"/>
-                    <Label fx:id="lblMejorCalificacion" style="-fx-font-size: 14px;"/>
+                    <Label text="👑 Mejor Mesero" />
+                    <Label fx:id="lblMejorMesero" style="-fx-font-size: 16px;" />
+                    <Label fx:id="lblMejorCalificacion" style="-fx-font-size: 14px;" />
                 </VBox>
             </HBox>
-            <Separator/>
-            <Label text="Ranking de Meseros" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-            <TableView fx:id="tablaRanking" prefHeight="410" maxWidth="850">
+            <Separator />
+            <Label style="-fx-font-weight: bold; -fx-font-size: 15px;" text="Ranking de Meseros" />
+            <TableView fx:id="tablaRanking" maxWidth="850" prefHeight="410">
                 <columns>
-                    <TableColumn fx:id="colNombre" text="Mesero" prefWidth="120"/>
-                    <TableColumn fx:id="colEstrellas" text="Calificación" prefWidth="110"/>
-                    <TableColumn fx:id="colPromedio" text="Promedio" prefWidth="70"/>
-                    <TableColumn fx:id="colComentario" text="Comentarios" prefWidth="210"/>
+                    <TableColumn fx:id="colNombre" prefWidth="120" text="Mesero" />
+                    <TableColumn fx:id="colEstrellas" prefWidth="110" text="Calificación" />
+                    <TableColumn fx:id="colPromedio" prefWidth="70" text="Promedio" />
+                    <TableColumn fx:id="colComentario" prefWidth="210" text="Comentarios" />
                 </columns>
             </TableView>
-            <Separator/>
-            <Label text="Comentarios Recientes" style="-fx-font-weight: bold;"/>
-            <ListView fx:id="listaComentarios" maxWidth="820" VBox.vgrow="ALWAYS"/>
-            <Button text="Detalles Completos" onAction="#abrirDetalleComentarios"
-                    style="-fx-background-color: #23A4F8; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 24; -fx-background-radius: 6;"
-                    alignment="CENTER_RIGHT"/>
+            <Separator />
+            <Label style="-fx-font-weight: bold;" text="Comentarios Recientes" />
+            <ListView fx:id="listaComentarios" maxWidth="820" VBox.vgrow="ALWAYS" />
+            <Button alignment="CENTER_RIGHT" onAction="#abrirDetalleComentarios" stylesheets="@../../../styles/mesero.css" text="Detalles Completos" />
         </VBox>
     </VBox>
 </AnchorPane>

@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.integradora.UsuariosAdminController"
-      alignment="TOP_CENTER" spacing="20" style="-fx-background-color: transparent;">
-    <Label text="Usuarios" styleClass="titulo-bienvenida"/>
-    <Button text="Añadir Usuario" fx:id="btnAnadirUsuario" onAction="#abrirAgregarUsuario" style="-fx-background-color: #1f87c3; -fx-text-fill: white;"/>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" spacing="20" style="-fx-background-color: transparent;" stylesheets="@../../../styles/mesero.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.UsuariosAdminController">
+    <Label styleClass="titulo-bienvenida" text="Usuarios" />
     <TableView fx:id="tablaUsuarios" prefWidth="700">
         <columns>
-            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
-            <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="120"/>
-            <TableColumn fx:id="colRol" text="Rol" prefWidth="120"/>
-            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/> <!-- ESTA ES LA QUE FALTABA -->
-            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="80"/>
+            <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre" />
+            <TableColumn fx:id="colUsuario" prefWidth="120" text="Usuario" />
+            <TableColumn fx:id="colRol" prefWidth="120" text="Rol" />
+            <TableColumn fx:id="colEstado" prefWidth="120" text="Estado" /> <!-- ESTA ES LA QUE FALTABA -->
+            <TableColumn fx:id="colAcciones" prefWidth="80" text="Acciones" />
         </columns>
     </TableView>
+    <Button fx:id="btnAnadirUsuario" onAction="#abrirAgregarUsuario"  text="Añadir Usuario" />
 
 </VBox>

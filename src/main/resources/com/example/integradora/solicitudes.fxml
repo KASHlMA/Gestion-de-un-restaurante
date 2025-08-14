@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 
-<VBox alignment="TOP_CENTER" spacing="25" styleClass="solicitudes-bg" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.integradora.SolicitudesController">
-    <Label fx:id="tituloLabel" text="Solicitudes de Cambios de Orden" styleClass="solicitud-titulo"/>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" spacing="25" styleClass="solicitudes-bg" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.integradora.SolicitudesController">
+    <Label fx:id="tituloLabel" styleClass="titulo-bienvenida" stylesheets="@../../../styles/mesero.css" text="Solicitudes de Cambios de Orden" />
     <TableView fx:id="tablaSolicitudes" prefWidth="700">
         <columns>
-            <TableColumn fx:id="colMesa" text="Mesa" prefWidth="100"/>
-            <TableColumn fx:id="colHorario" text="Horario" prefWidth="100"/>
-            <TableColumn fx:id="colMesero" text="Mesero" prefWidth="150"/>
-            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="220"/>
-            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
-            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="270"/>
+            <TableColumn fx:id="colMesa" prefWidth="100" text="Mesa" />
+            <TableColumn fx:id="colHorario" prefWidth="100" text="Horario" />
+            <TableColumn fx:id="colMesero" prefWidth="150" text="Mesero" />
+            <TableColumn fx:id="colDescripcion" prefWidth="220" text="Descripción" />
+            <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
+            <TableColumn fx:id="colAcciones" prefWidth="270" text="Acciones" />
         </columns>
     </TableView>
 </VBox>
