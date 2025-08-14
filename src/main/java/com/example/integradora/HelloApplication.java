@@ -12,7 +12,6 @@ public class HelloApplication extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-
         stage.setTitle("FastFood");
         stage.setScene(scene);
         stage.setMaximized(true);

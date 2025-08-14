@@ -114,13 +114,37 @@ public class DashboardCalificacionesController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/detalle_comentarios.fxml"));
             Parent root = loader.load();
+
+            // dueño para que quede encima de la ventana principal (opcional pero recomendado)
+            Stage owner = (Stage) tablaRanking.getScene().getWindow();
+
             Stage stage = new Stage();
             stage.setTitle("Comentarios Detallados");
-            stage.setScene(new Scene(root));
+            stage.initOwner(owner);
+            stage.initModality(javafx.stage.Modality.WINDOW_MODAL); // si quieres que sea modal
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            // Permite que el root crezca al maximizar
+            if (root instanceof javafx.scene.layout.Region r) {
+                r.setMinSize(javafx.scene.layout.Region.USE_COMPUTED_SIZE, javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+                r.setPrefSize(javafx.scene.layout.Region.USE_COMPUTED_SIZE, javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+                r.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                r.prefWidthProperty().bind(scene.widthProperty());
+                r.prefHeightProperty().bind(scene.heightProperty());
+            }
+
+            // Maximiza el diálogo
+            stage.setMaximized(true);
+            // algunos entornos aplican mejor si lo fuerzas al mostrarse
+            stage.setOnShown(ev -> stage.setMaximized(true));
+
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 }

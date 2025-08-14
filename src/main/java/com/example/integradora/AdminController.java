@@ -58,7 +58,7 @@ public class AdminController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) contenidoCentral.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo volver al login.");

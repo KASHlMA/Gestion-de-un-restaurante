@@ -175,7 +175,7 @@ public class LiderController {
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setMaximized(true); // <-- Aquí se maximiza la ventana
 
         } catch (Exception e) {

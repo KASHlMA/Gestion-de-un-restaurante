@@ -86,7 +86,7 @@ public class CalificarMeseroController {
             meseroController.setIdMesero(idMesero, "Mesero"); // Pasa el nombre real si lo tienes
 
             Stage stage = (Stage) btnEnviar.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("No se pudo regresar al menú de Mesas.");

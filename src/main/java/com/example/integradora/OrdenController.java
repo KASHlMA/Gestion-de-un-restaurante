@@ -240,7 +240,7 @@ public class OrdenController {
             controller.setDatosOrden(idOrden, idMesero, nombreMesero, ruta);
 
             Stage stage = (Stage) tablaOrden.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -303,7 +303,7 @@ public class OrdenController {
             MeseroController meseroController = loader.getController();
             meseroController.setIdMesero(idMesero, nombreMesero);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo volver atrás.");
@@ -316,7 +316,7 @@ public class OrdenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo volver al login.");

@@ -123,7 +123,7 @@ public class DetalleOrdenController {
                     asignacionId
             );
             Stage stage = (Stage) tablaDetalle.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo abrir la edición de la orden.");
@@ -160,7 +160,7 @@ public class DetalleOrdenController {
             MeseroController meseroController = loader.getController();
             meseroController.setIdMesero(idMesero, nombreMesero);
             Stage stage = (Stage) tablaDetalle.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             // No hace falta llamar a actualizarEstadoBotones() aquí, ya que sales de esta pantalla.
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,7 +182,7 @@ public class DetalleOrdenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cerrar la sesión.");

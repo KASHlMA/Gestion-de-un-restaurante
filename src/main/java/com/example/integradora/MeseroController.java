@@ -125,7 +125,7 @@ public class MeseroController {
             // AHORA PASA EL ASIGNACION_ID
             ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), asignacion.getMesa(), asignacion.getHorario(), asignacion.getAsignacionId());
             Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo abrir la pantalla de orden.");
@@ -197,7 +197,7 @@ public class MeseroController {
             OrdenController ordenController = loader.getController();
             ordenController.setDatosMesa(idMesero, labelNombreMesero.getText(), nombreMesa, horario, asignacionId);
             Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo abrir la pantalla de modificación de orden.");
@@ -249,7 +249,7 @@ public class MeseroController {
             controller.setDatosOrden(idOrden, idMesero, labelNombreMesero.getText(), "Mesas Asignadas/Resumen Final");
 
             Stage stage = (Stage) tablaMesasMesero.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo mostrar el resumen final.");
@@ -273,7 +273,7 @@ public class MeseroController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo volver al login.");

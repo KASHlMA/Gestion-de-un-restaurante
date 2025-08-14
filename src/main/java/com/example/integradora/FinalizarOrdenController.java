@@ -86,7 +86,7 @@ public class FinalizarOrdenController {
             controller.setDatos(idMesero, idOrden);
 
             Stage stage = (Stage) btnFinalizar.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo mostrar la pantalla de calificación.");
@@ -99,7 +99,7 @@ public class FinalizarOrdenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/integradora/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cerrar la sesión.");
